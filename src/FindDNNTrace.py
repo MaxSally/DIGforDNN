@@ -1,7 +1,8 @@
 import tensorflow as tf
 import numpy as np
+from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Flatten
+from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense
 from keras import backend as K
 
@@ -22,14 +23,13 @@ model.summary()
 
 inps = np.array([[-9, 10]])
 inps.reshape(1, 2)
-print(model.input_shape)
-predictions = model.predict(inps)
-print(predictions)
-outputs = []
-for layer in model.layers:
-    keras_function = K.function([model.input], [layer.output])
-    outputs.append(keras_function([inps, 1]))
-print(outputs)
-print("Model: weights:" + str(model.get_weights()))
+# for layer in model.layers:
+#     keras_function = K.function([model.input], [layer.output])
+#     outputs.append(keras_function([inps, 1]))
+extractor = keras.Model(inputs=model.inputs,
+                        outputs=[layer.output for layer in model.layers])
+outputs = extractor(inps)
+for layer in outputs:
+    print(layer.numpy())
 
 
