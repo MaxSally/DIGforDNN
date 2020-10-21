@@ -11,7 +11,8 @@ from sklearn import metrics  # Import scikit-learn metrics module for accuracy c
 import matplotlib.pyplot as plt
 
 model = Sequential()
-weight = np.array([[[1.0, -1.0], [1.0, -1.0]], [[[0.5, -0.5], [-0.2, 0.1]]], [[[1.0, -1.0], [-1.0, 1.0]]]])
+number_of_layer = 2
+weight = np.array([[[1.0, 1.0], [-1.0, 1.0]], [[[0.5, -0.2], [-0.5, 0.1]]], [[[1.0, -1.0], [-1.0, 1.0]]]])
 bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
 activation = 'relu'
 layer1 = Dense(2, input_shape=(2,), activation=activation, kernel_initializer=tf.constant_initializer(weight[0]),
@@ -23,10 +24,10 @@ layer3 = Dense(2, kernel_initializer=tf.constant_initializer(weight[2]),
 model.add(layer1)
 model.add(layer2)
 model.add(layer3)
-X = []
+X = [[] for i in range(number_of_layer)]
 Y = []
 
-for test in range(10):
+for test in range(60):
     a = random.randint(-10, 10)
     b = random.randint(-10, 10)
     inps = np.array([[a, b]])
@@ -37,32 +38,19 @@ for test in range(10):
     extractor = keras.Model(inputs=model.inputs,
                             outputs=[layer.output for layer in model.layers])
     outputs = extractor(inps)
-    tempX = []
     tempY = []
     cnt = 0
     for layer in outputs:
         for x in layer.numpy() > 0:
-            cnt += 1
-            if cnt < len(outputs):
-                for y in x:
-                    tempX.append(y)
+
+            if cnt < len(outputs) - 1:
+                X[cnt].append(x)
             else:
                 tempY.append(True if x[0] > x[1] else False)
-    X.append(tempX)
+            cnt += 1
     Y.append(tempY)
 print(X)
 print(Y)
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=1)
-
-# Decision Tree
-decisionTree = DecisionTreeClassifier()
-decisionTree = decisionTree.fit(X_train, Y_train)
-
-Y_pred = decisionTree.predict(X_test)
-
-print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
-
 
 def get_rules(dtc, df):
     rules_list = []
@@ -123,9 +111,19 @@ def get_rules(dtc, df):
 
     return (rules_list, values_path)
 
+for layer in range(number_of_layer):
+    X_train, X_test, Y_train, Y_test = train_test_split(X[layer], Y, test_size=0.3, random_state=1)
 
-(rules_list, values_path) = get_rules(decisionTree, X)
-print(rules_list)
+    # Decision Tree
+    decisionTree = DecisionTreeClassifier()
+    decisionTree = decisionTree.fit(X_train, Y_train)
 
-text_representation = tree.export_text(decisionTree)
-print(text_representation)
+    Y_pred = decisionTree.predict(X_test)
+
+    print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
+
+    (rules_list, values_path) = get_rules(decisionTree, X)
+    print(rules_list)
+
+    text_representation = tree.export_text(decisionTree)
+    print(text_representation)
