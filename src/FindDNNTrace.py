@@ -11,27 +11,31 @@ from sklearn import metrics  # Import scikit-learn metrics module for accuracy c
 import matplotlib.pyplot as plt
 
 model = Sequential()
-number_of_layer = 2
+number_of_layer = 3
+number_of_neurons_each_layer = 2
 weight = np.array([[[1.0, 1.0], [-1.0, 1.0]], [[[0.5, -0.2], [-0.5, 0.1]]], [[[1.0, -1.0], [-1.0, 1.0]]]])
 bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
+
+print(weight)
+print(bias)
 activation = 'relu'
-layer1 = Dense(2, input_shape=(2,), activation=activation, kernel_initializer=tf.constant_initializer(weight[0]),
-               bias_initializer=tf.constant_initializer(bias[0]))
-layer2 = Dense(2, activation=activation, kernel_initializer=tf.constant_initializer(weight[1]),
-               bias_initializer=tf.constant_initializer(bias[1]))
-layer3 = Dense(2, kernel_initializer=tf.constant_initializer(weight[2]),
-               bias_initializer=tf.constant_initializer(bias[2]))
+layer1 = Dense(number_of_neurons_each_layer, input_shape=(number_of_neurons_each_layer,), activation=activation, kernel_initializer=tf.constant_initializer(weight[0]),
+               bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
+layer2 = Dense(number_of_neurons_each_layer, activation=activation, kernel_initializer=tf.constant_initializer(weight[1]),
+               bias_initializer=tf.constant_initializer(bias[1]), dtype='float64')
+layer3 = Dense(number_of_neurons_each_layer, kernel_initializer=tf.constant_initializer(weight[2]),
+               bias_initializer=tf.constant_initializer(bias[2]), dtype='float64')
+
 model.add(layer1)
 model.add(layer2)
 model.add(layer3)
 X = [[] for i in range(number_of_layer)]
 Y = []
 
-for test in range(60):
-    a = random.randint(-10, 10)
-    b = random.randint(-10, 10)
-    inps = np.array([[a, b]])
-    inps.reshape(1, 2)
+for test in range(100):
+    inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer))
+    inps.reshape(1, number_of_neurons_each_layer)
+    #print(inps)
     # for layer in model.layers:
     #     keras_function = K.function([model.input], [layer.output])
     #     outputs.append(keras_function([inps, 1]))
@@ -42,15 +46,17 @@ for test in range(60):
     cnt = 0
     for layer in outputs:
         for x in layer.numpy() > 0:
-
+            # if(cnt == 0 and x[0] > 0 and x[1] > 0):
+            #     print(inps)
+            #     print(outputs)
             if cnt < len(outputs) - 1:
                 X[cnt].append(x)
             else:
                 tempY.append(True if x[0] > x[1] else False)
             cnt += 1
     Y.append(tempY)
-print(X)
-print(Y)
+# print(X)
+# print(Y)
 
 def get_rules(dtc, df):
     rules_list = []
@@ -68,7 +74,6 @@ def get_rules(dtc, df):
         '''
         # now find the node as either a left or right child of something
         # first try to find it as a left node
-
         try:
             prevnode = tree[2].index(node)
             leftright = '<='
@@ -109,9 +114,9 @@ def get_rules(dtc, df):
         rules_list.append(rules)
         values_path.append(pathValues)
 
-    return (rules_list, values_path)
+    return rules_list, values_path
 
-for layer in range(number_of_layer):
+for layer in range(number_of_layer - 1):
     X_train, X_test, Y_train, Y_test = train_test_split(X[layer], Y, test_size=0.3, random_state=1)
 
     # Decision Tree
@@ -122,8 +127,15 @@ for layer in range(number_of_layer):
 
     print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
 
-    (rules_list, values_path) = get_rules(decisionTree, X)
-    print(rules_list)
-
-    text_representation = tree.export_text(decisionTree)
+    #(rules_list, values_path) = get_rules(decisionTree, X)
+    #print(rules_list)
+    names = []
+    NEURON = "NEURON_"
+    for i in range(number_of_neurons_each_layer):
+        names.append(str(NEURON + str(layer) + str(i)))
+    text_representation = tree.export_text(decisionTree, feature_names=names)
+    text_representation = text_representation.replace('<= 0.50', '== FALSE')
+    text_representation = text_representation.replace('>  0.50', '== TRUE')
     print(text_representation)
+    #print(decisionTree.decision_path(X_test))
+
