@@ -1,4 +1,6 @@
 import random
+from copy import deepcopy
+
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
@@ -16,12 +18,15 @@ number_of_neurons_each_layer = 2
 weight = np.array([[[1.0, 1.0], [-1.0, 1.0]], [[[0.5, -0.2], [-0.5, 0.1]]], [[[1.0, -1.0], [-1.0, 1.0]]]])
 bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
 
-print(weight)
-print(bias)
+# print(weight)
+# print(bias)
 activation = 'relu'
-layer1 = Dense(number_of_neurons_each_layer, input_shape=(number_of_neurons_each_layer,), activation=activation, kernel_initializer=tf.constant_initializer(weight[0]),
+predicate = "y1 > y2"
+layer1 = Dense(number_of_neurons_each_layer, input_shape=(number_of_neurons_each_layer,), activation=activation,
+               kernel_initializer=tf.constant_initializer(weight[0]),
                bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
-layer2 = Dense(number_of_neurons_each_layer, activation=activation, kernel_initializer=tf.constant_initializer(weight[1]),
+layer2 = Dense(number_of_neurons_each_layer, activation=activation,
+               kernel_initializer=tf.constant_initializer(weight[1]),
                bias_initializer=tf.constant_initializer(bias[1]), dtype='float64')
 layer3 = Dense(number_of_neurons_each_layer, kernel_initializer=tf.constant_initializer(weight[2]),
                bias_initializer=tf.constant_initializer(bias[2]), dtype='float64')
@@ -32,10 +37,10 @@ model.add(layer3)
 X = [[] for i in range(number_of_layer)]
 Y = []
 
-for test in range(100):
+for test in range(1000):
     inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer))
     inps.reshape(1, number_of_neurons_each_layer)
-    #print(inps)
+    # print(inps)
     # for layer in model.layers:
     #     keras_function = K.function([model.input], [layer.output])
     #     outputs.append(keras_function([inps, 1]))
@@ -55,66 +60,78 @@ for test in range(100):
                 tempY.append(True if x[0] > x[1] else False)
             cnt += 1
     Y.append(tempY)
+
+
 # print(X)
 # print(Y)
 
-def get_rules(dtc, df):
-    rules_list = []
-    values_path = []
-    values = dtc.tree_.value
+class NodePath:
+    name = ""
+    state = True
 
-    def RevTraverseTree(tree, node, rules, pathValues):
-        '''
-        Traverase an skl decision tree from a node (presumably a leaf node)
-        up to the top, building the decision rules. The rules should be
-        input as an empty list, which will be modified in place. The result
-        is a nested list of tuples: (feature, direction (left=-1), threshold).
-        The "tree" is a nested list of simplified tree attributes:
-        [split feature, split threshold, left node, right node]
-        '''
-        # now find the node as either a left or right child of something
-        # first try to find it as a left node
-        try:
-            prevnode = tree[2].index(node)
-            leftright = '<='
-            pathValues.append(values[prevnode])
-        except ValueError:
-            prevnode = tree[3].index(node)
-            leftright = '>'
-            pathValues.append(values[prevnode])
+    def __init__(self, name, state):
+        self.name = name
+        self.state = state
 
-        # p1 = df.columns[tree[0][prevnode]]
-        p1 = tree[0][prevnode]
-        p2 = tree[1][prevnode]
-        rules.append('Neuron ' + str(p1) + ' ' + leftright + ' ' + str(p2))
 
-        if prevnode != 0:
-            RevTraverseTree(tree, prevnode, rules, pathValues)
+def input_implication(weight, bias, neuron):
+    m = len(weight)
+    n = len(bias)
+    weight = np.array(weight).T
+    result = ""
+    for i in range(n):
+        output = ""
+        for j in range(m):
+            output += str(weight[i][j]) + ".x" + str(j) + " + "
+        output += str(bias[j][0])
+        if neuron[i]:
+            output += " > 0"
+        else:
+            output += " <= 0"
+        result += ("" if result == "" else " and ") + output
+    result += " -> " + predicate
+    print(result)
 
-    leaves = dtc.tree_.children_left == -1
-    leaves = np.arange(0, dtc.tree_.node_count)[leaves]
+def extract_decision_tree(tree, feature_names):
+    '''
+    Outputs a decision tree model as if/then pseudocode
 
-    thistree = [dtc.tree_.feature.tolist()]
-    thistree.append(dtc.tree_.threshold.tolist())
-    thistree.append(dtc.tree_.children_left.tolist())
-    thistree.append(dtc.tree_.children_right.tolist())
+    Parameters:
+    -----------
+    tree: decision tree model
+        The decision tree to represent as pseudocode
+    feature_names: list
+        The feature names of the dataset used for building the decision tree
+    '''
 
-    # get the decision rules for each leaf node & apply them
-    for (ind, nod) in enumerate(leaves):
-        # get the decision rules
-        rules = []
-        pathValues = []
-        RevTraverseTree(thistree, nod, rules, pathValues)
+    left = tree.tree_.children_left
+    right = tree.tree_.children_right
+    threshold = tree.tree_.threshold
+    features = [feature_names[i] for i in tree.tree_.feature]
+    value = tree.tree_.value
+    path = []
+    result = []
+    def recurse(left, right, threshold, features, node, path, depth=0):
+        if threshold[node] != -2:
+            if left[node] != -1:
+                originalPath = deepcopy(path)
+                path.append(NodePath(features[node], False))
+                recurse(left, right, threshold, features, left[node], path,
+                        depth + 1)
+                if right[node] != -1:
+                    originalPath.append(NodePath(features[node], True))
+                    recurse(left, right, threshold, features, right[node],
+                            originalPath,  depth + 1)
+        else:
+            if value[node][0][0] < value[node][0][1]:
+                case = []
+                for nodePath in path:
+                    case.append(nodePath.state)
+                result.append(case)
 
-        pathValues.insert(0, values[nod])
-        pathValues = list(reversed(pathValues))
+    recurse(left, right, threshold, features, 0, path)
+    return result
 
-        rules = list(reversed(rules))
-
-        rules_list.append(rules)
-        values_path.append(pathValues)
-
-    return rules_list, values_path
 
 for layer in range(number_of_layer - 1):
     X_train, X_test, Y_train, Y_test = train_test_split(X[layer], Y, test_size=0.3, random_state=1)
@@ -127,8 +144,8 @@ for layer in range(number_of_layer - 1):
 
     print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
 
-    #(rules_list, values_path) = get_rules(decisionTree, X)
-    #print(rules_list)
+    # (rules_list, values_path) = get_rules(decisionTree, X)
+    # print(rules_list)
     names = []
     NEURON = "NEURON_"
     for i in range(number_of_neurons_each_layer):
@@ -137,5 +154,13 @@ for layer in range(number_of_layer - 1):
     text_representation = text_representation.replace('<= 0.50', '== FALSE')
     text_representation = text_representation.replace('>  0.50', '== TRUE')
     print(text_representation)
-    #print(decisionTree.decision_path(X_test))
+    if layer == 0:
+        trace = extract_decision_tree(decisionTree, names)
+        input_implication(weight[0], bias[0], trace[0])
+
+
+
+
+
+
 
