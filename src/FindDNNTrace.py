@@ -1,6 +1,5 @@
 import random
 from copy import deepcopy
-
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
@@ -21,7 +20,8 @@ bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
 # print(weight)
 # print(bias)
 activation = 'relu'
-predicate = "y1 > y2"
+queryType = 4
+predicate = ["y1 > y2", "y1 < y2", "y1 == y2", "y1 <= 0", "y2 <= 0"]
 layer1 = Dense(number_of_neurons_each_layer, input_shape=(number_of_neurons_each_layer,), activation=activation,
                kernel_initializer=tf.constant_initializer(weight[0]),
                bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
@@ -57,7 +57,16 @@ for test in range(1000):
             if cnt < len(outputs) - 1:
                 X[cnt].append(x)
             else:
-                tempY.append(True if x[0] > x[1] else False)
+                if queryType == 0:
+                    tempY.append(True if x[0] > x[1] else False)
+                elif queryType == 1:
+                    tempY.append(True if x[0] < x[1] else False)
+                elif queryType == 2:
+                    tempY.append(True if x[0] == x[1] else False)
+                elif queryType == 3:
+                    tempY.append(True if x[0] <= 0 else False)
+                else:
+                    tempY.append(True if x[1] <= 0 else False)
             cnt += 1
     Y.append(tempY)
 
@@ -74,7 +83,7 @@ class NodePath:
         self.state = state
 
 
-def input_implication(weight, bias, neuron):
+def input_implication(weight, bias, neuron, names):
     m = len(weight)
     n = len(bias)
     weight = np.array(weight).T
@@ -84,12 +93,14 @@ def input_implication(weight, bias, neuron):
         for j in range(m):
             output += str(weight[i][j]) + ".x" + str(j) + " + "
         output += str(bias[j][0])
-        if neuron[i]:
+        if names[i] not in neuron:
+            continue
+        elif neuron[names[i]]:
             output += " > 0"
         else:
             output += " <= 0"
         result += ("" if result == "" else " and ") + output
-    result += " -> " + predicate
+    result += " -> " + predicate[queryType]
     print(result)
 
 def extract_decision_tree(tree, feature_names):
@@ -124,9 +135,9 @@ def extract_decision_tree(tree, feature_names):
                             originalPath,  depth + 1)
         else:
             if value[node][0][0] < value[node][0][1]:
-                case = []
+                case = dict()
                 for nodePath in path:
-                    case.append(nodePath.state)
+                    case[nodePath.name] = nodePath.state
                 result.append(case)
 
     recurse(left, right, threshold, features, 0, path)
@@ -155,8 +166,9 @@ for layer in range(number_of_layer - 1):
     text_representation = text_representation.replace('>  0.50', '== TRUE')
     print(text_representation)
     if layer == 0:
-        trace = extract_decision_tree(decisionTree, names)
-        input_implication(weight[0], bias[0], trace[0])
+        traces = extract_decision_tree(decisionTree, names)
+        for trace in traces:
+            input_implication(weight[0], bias[0], trace, names)
 
 
 
