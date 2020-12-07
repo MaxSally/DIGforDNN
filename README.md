@@ -6,10 +6,11 @@ Main file is 'FindDnnTrace.py'
 2. Running:
 - In Pycharm, make sure all the required libraries are installed in the Python interpreter. Run `FindDNNTrace.py`.
     + If needed, downgrading to `python 3.6` for conda environment.    
-- Command line: 
-    -`chmod +x FindDNNTrace.py`
-    - `python FindDNNTrace.py`
-    - If need to install library: `python -m pip install PACKAGE_NAME`
+-   Command line: 
+    + Go to `DIGforDNN/src`
+    + `chmod +x FindDNNTrace.py` to allow execution on the program
+    + `python FindDNNTrace.py` to run it. Expected output shown in section 3.
+    + If needed to install library: `python -m pip install PACKAGE_NAME`
 
 3. Expected Output:
 
