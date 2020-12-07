@@ -168,11 +168,11 @@ def decision_tree_analysis(X, Y, names):
 
     Y_pred = decisionTree.predict(X_test)
 
-    print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
+    #print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
     text_representation = tree.export_text(decisionTree, feature_names=names)
     text_representation = text_representation.replace('<= 0.50', '== FALSE')
     text_representation = text_representation.replace('>  0.50', '== TRUE')
-    print(text_representation)
+    #print(text_representation)
     return decisionTree
 
 
@@ -180,7 +180,7 @@ def decision_tree_analysis(X, Y, names):
 def previous_layer_implication(weight, bias):
     m = len(weight)
     n = len(bias)
-    for layer in range(number_of_layer):
+    for layer in range(1, number_of_layer):
         local_X = X[layer]
         if layer > 0:
             for case in local_X:
@@ -195,6 +195,7 @@ def previous_layer_implication(weight, bias):
             # if layer > 0:
             for trace in traces:
                 consecutive_implication(weight[layer], bias[layer], trace, names, layer, rule)
+        print()
 
 
 def input_implication(weight, bias, neuron, names):
@@ -246,3 +247,4 @@ for layer in range(1, number_of_layer):
                 input_implication(weight[0], bias[0], trace, names)
         for trace in traces:
             consecutive_implication(weight[layer], bias[layer], trace, names, 3, rule)
+    print()
