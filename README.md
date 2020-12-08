@@ -9,7 +9,8 @@ Main file is 'FindDnnTrace.py'
 -   Command line: 
     + Go to `DIGforDNN/src`
     + `chmod +x FindDNNTrace.py` to allow execution on the program
-    + `python FindDNNTrace.py` to run it. Expected output shown in section 3.
+    + `python FindDNNTrace.py INPUT_FILE` to run it. Expected output shown in section 3.
+    + Sample input is `input.json`. As of right now, the program only accepts input in json format. 
     + If needed to install library: `python -m pip install PACKAGE_NAME`
 
 3. Expected Output:

@@ -1,4 +1,4 @@
-import random
+import sys
 from copy import deepcopy
 import tensorflow as tf
 import numpy as np
@@ -8,49 +8,9 @@ from tensorflow.keras.layers import Dense
 from sklearn.tree import DecisionTreeClassifier  # Import Decision Tree Classifier
 from sklearn import tree
 from sklearn.model_selection import train_test_split  # Import train_test_split function
-from sklearn import metrics  # Import scikit-learn metrics module for accuracy calculation
-import matplotlib.pyplot as plt
+import json
 
-model = Sequential()
-number_of_layer = 3
-number_of_neurons_each_layer = 2
-number_of_rule = 5
-weight = np.array([[[1.0, -1.0], [1.0, 1.0]], [[0.5, -0.2], [-0.5, 0.1]], [[1.0, -1.0], [-1.0, 1.0]]])
-bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
 
-# print(weight)
-# print(bias)
-activation = 'relu'
-layer1 = Dense(number_of_neurons_each_layer, input_shape=(number_of_neurons_each_layer,), activation=activation,
-               kernel_initializer=tf.constant_initializer(weight[0]),
-               bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
-layer2 = Dense(number_of_neurons_each_layer, activation=activation,
-               kernel_initializer=tf.constant_initializer(weight[1]),
-               bias_initializer=tf.constant_initializer(bias[1]), dtype='float64')
-layer3 = Dense(number_of_neurons_each_layer, kernel_initializer=tf.constant_initializer(weight[2]),
-               bias_initializer=tf.constant_initializer(bias[2]), dtype='float64')
-
-model.add(layer1)
-model.add(layer2)
-model.add(layer3)
-X = [[] for i in range(number_of_layer + 1)]
-
-for test in range(1000):
-    inps = np.random.uniform(-100, 100, (1, number_of_neurons_each_layer))
-    inps.reshape(1, number_of_neurons_each_layer)
-    # print(inps)
-    # for layer in model.layers:
-    #     keras_function = K.function([model.input], [layer.output])
-    #     outputs.append(keras_function([inps, 1]))
-    extractor = keras.Model(inputs=model.inputs,
-                            outputs=[layer.output for layer in model.layers])
-    outputs = extractor(inps)
-    X[0].append(inps[0])
-    cnt = 1
-    for layer in outputs:
-        for node in layer.numpy():
-            X[cnt].append(node)
-            cnt += 1
 
 
 class NodePath:
@@ -139,7 +99,7 @@ def consecutive_implication(weight, bias, neuron, names, layerI, rule):
 def get_name(layer):
     names = []
     NEURON = "NEURON_"
-    for i in range(number_of_neurons_each_layer):
+    for i in range(number_of_neurons_each_layer[layer]):
         names.append((str(NEURON + str(layer) if layer >= 0 else "x") + str(i)))
     return names
 
@@ -184,7 +144,7 @@ def previous_layer_implication(weight, bias):
         local_X = X[layer]
         if layer > 0:
             for case in local_X:
-                for neuron in range(number_of_neurons_each_layer):
+                for neuron in range(number_of_neurons_each_layer[layer]):
                     case[neuron] = case[neuron] > 0
         names = get_name(layer - 1)
         for rule in range(number_of_rule):
@@ -231,20 +191,78 @@ def input_implication(weight, bias, neuron, names):
     print(result)
 
 
-previous_layer_implication(weight, bias)
+def input_processing(filename):
+    data = {}
+    number_of_layer = -1
+    number_of_neurons_each_layer = []
+    number_of_rule = -1
+    weight = []
+    bias = []
+    with open(filename, "r") as f:
+        data = json.load(f)
+        weight = data["weight"]
+        bias = data["bias"]
+        number_of_rule = data["number_of_rule"]
+        number_of_neurons_each_layer = data["number_of_neurons_each_layer"]
+        number_of_layer = data["number_of_layer"]
+    return number_of_layer, number_of_neurons_each_layer, number_of_rule, weight, bias
 
-print("Each layer to the final output")
-for layer in range(1, number_of_layer):
-    print("Layer: " + str(layer))
-    local_X = X[layer]
-    names = get_name(layer - 1)
-    for rule in range(number_of_rule):
-        Y = getY(rule, X[number_of_layer])
-        decisionTree = decision_tree_analysis(local_X, Y, names)
-        traces = extract_decision_tree(decisionTree, names)
-        for trace in traces:
-            if layer == 1:
-                input_implication(weight[0], bias[0], trace, names)
-        for trace in traces:
-            consecutive_implication(weight[layer], bias[layer], trace, names, 3, rule)
-    print()
+
+
+
+
+if __name__ == "__main__":
+    filename = sys.argv[1]
+    model = Sequential()
+    number_of_layer, number_of_neurons_each_layer, number_of_rule, weight, bias = input_processing(filename)
+
+    # print(weight)
+    # print(bias)
+    activation = 'relu'
+    layer1 = Dense(number_of_neurons_each_layer[0], input_shape=(number_of_neurons_each_layer[0],), activation=activation,
+                   kernel_initializer=tf.constant_initializer(weight[0]),
+                   bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
+    layer2 = Dense(number_of_neurons_each_layer[1], activation=activation,
+                   kernel_initializer=tf.constant_initializer(weight[1]),
+                   bias_initializer=tf.constant_initializer(bias[1]), dtype='float64')
+    layer3 = Dense(number_of_neurons_each_layer[2], kernel_initializer=tf.constant_initializer(weight[2]),
+                   bias_initializer=tf.constant_initializer(bias[2]), dtype='float64')
+
+    model.add(layer1)
+    model.add(layer2)
+    model.add(layer3)
+    X = [[] for i in range(number_of_layer + 1)]
+
+    for test in range(1000):
+        inps = np.random.uniform(-100, 100, (1, number_of_neurons_each_layer[0]))
+        inps.reshape(1, number_of_neurons_each_layer[0])
+        # print(inps)
+        # for layer in model.layers:
+        #     keras_function = K.function([model.input], [layer.output])
+        #     outputs.append(keras_function([inps, 1]))
+        extractor = keras.Model(inputs=model.inputs,
+                                outputs=[layer.output for layer in model.layers])
+        outputs = extractor(inps)
+        X[0].append(inps[0])
+        cnt = 1
+        for layer in outputs:
+            for node in layer.numpy():
+                X[cnt].append(node)
+                cnt += 1
+    previous_layer_implication(weight, bias)
+    print("Each layer to the final output")
+    for layer in range(1, number_of_layer):
+        print("Layer: " + str(layer))
+        local_X = X[layer]
+        names = get_name(layer - 1)
+        for rule in range(number_of_rule):
+            Y = getY(rule, X[number_of_layer])
+            decisionTree = decision_tree_analysis(local_X, Y, names)
+            traces = extract_decision_tree(decisionTree, names)
+            for trace in traces:
+                if layer == 1:
+                    input_implication(weight[0], bias[0], trace, names)
+            for trace in traces:
+                consecutive_implication(weight[layer], bias[layer], trace, names, 3, rule)
+        print()
+
