@@ -23,6 +23,11 @@ class NodePath:
         self.threshold = threshold
         self.sign = sign
 
+def printDT(decisionTree, names):
+    text_representation = tree.export_text(decisionTree, feature_names=names)
+    text_representation = text_representation.replace('<= 0.50', '== FALSE')
+    text_representation = text_representation.replace('>  0.50', '== TRUE')
+    print(text_representation)
 
 def extract_decision_tree(tree, feature_names):
     '''
@@ -56,6 +61,8 @@ def extract_decision_tree(tree, feature_names):
                     recurse(left, right, threshold, features, right[node],
                             originalPath, depth + 1)
         else:
+            if len(value[node][0]) == 1:
+                return
             if value[node][0][0] < value[node][0][1] and value[node][0][0] == 0:
                 case = dict()
                 for nodePath in path:
@@ -66,7 +73,7 @@ def extract_decision_tree(tree, feature_names):
     return result
 
 
-def consecutive_implication(weight, bias, neuron, names, layerI, rule):
+def layer_layer_implication(weight, bias, neuron, names, layerI, rule):
     m = len(weight)
     n = len(bias)
     weight = np.array(weight)
@@ -81,7 +88,7 @@ def consecutive_implication(weight, bias, neuron, names, layerI, rule):
             output += names[i] + " == False"
         result += ("" if result == "" else " and ") + output
         implication = ""
-        NEURON_NAME = ("NEURON_" + str(layerI) if layerI < number_of_layer else "y")
+        NEURON_NAME = ("NEURON_" + str(layerI) if layerI < number_of_layer - 1 else "y")
         if rule == 0:
             implication = NEURON_NAME + "0 > " + NEURON_NAME + "1"
         elif rule == 1:
@@ -89,18 +96,24 @@ def consecutive_implication(weight, bias, neuron, names, layerI, rule):
         elif rule == 2:
             implication = NEURON_NAME + "0 == " + NEURON_NAME + "1"
         elif rule == 3:
-            implication = NEURON_NAME + "0 < 0"
+            implication = NEURON_NAME + "0 <= 0"
         else:
-            implication = NEURON_NAME + "1 < 0"
+            implication = NEURON_NAME + "1 <= 0"
     result += " => " + implication
     print(result)
 
 
 def get_name(layer):
     names = []
-    NEURON = "NEURON_"
+    NEURON = ""
+    if layer < 0:
+        NEURON = "x"
+    elif layer == number_of_layer - 1:
+        NEURON = "y"
+    else:
+        NEURON = "NEURON_" + str(layer)
     for i in range(number_of_neurons_each_layer[layer]):
-        names.append((str(NEURON + str(layer) if layer >= 0 else "x") + str(i)))
+        names.append(NEURON + str(i))
     return names
 
 
@@ -152,9 +165,12 @@ def previous_layer_implication(weight, bias):
             Y = getY(rule, X[layer + 1])
             decisionTree = decision_tree_analysis(local_X, Y, names)
             traces = extract_decision_tree(decisionTree, names)
+            if len(traces) == 0:
+                print("No properties")
+                continue
             # if layer > 0:
             for trace in traces:
-                consecutive_implication(weight[layer], bias[layer], trace, names, layer, rule)
+                layer_layer_implication(weight[layer], bias[layer], trace, names, layer, rule)
         print()
 
 
@@ -184,9 +200,9 @@ def input_implication(weight, bias, neuron, names):
     elif rule == 2:
         implication = "y0 == y1"
     elif rule == 3:
-        implication = "y0 < 0"
+        implication = "y0 <= 0"
     else:
-        implication = "y1 < 0"
+        implication = "y1 <= 0"
     result += " => " + implication
     print(result)
 
@@ -219,18 +235,20 @@ if __name__ == "__main__":
     # print(weight)
     # print(bias)
     activation = 'relu'
-    layer1 = Dense(number_of_neurons_each_layer[0], input_shape=(number_of_neurons_each_layer[0],), activation=activation,
-                   kernel_initializer=tf.constant_initializer(weight[0]),
-                   bias_initializer=tf.constant_initializer(bias[0]), dtype='float64')
-    layer2 = Dense(number_of_neurons_each_layer[1], activation=activation,
-                   kernel_initializer=tf.constant_initializer(weight[1]),
-                   bias_initializer=tf.constant_initializer(bias[1]), dtype='float64')
-    layer3 = Dense(number_of_neurons_each_layer[2], kernel_initializer=tf.constant_initializer(weight[2]),
-                   bias_initializer=tf.constant_initializer(bias[2]), dtype='float64')
-
-    model.add(layer1)
-    model.add(layer2)
-    model.add(layer3)
+    for i in range(number_of_layer):
+        if i == 0:
+            model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[i],), activation=activation,
+                   kernel_initializer=tf.constant_initializer(weight[i]),
+                   bias_initializer=tf.constant_initializer(bias[i]), dtype='float64'))
+        elif i == number_of_layer - 1:
+            model.add(Dense(number_of_neurons_each_layer[i],
+                   kernel_initializer=tf.constant_initializer(weight[i]),
+                   bias_initializer=tf.constant_initializer(bias[i]), dtype='float64'))
+        else:
+            model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
+                   kernel_initializer=tf.constant_initializer(weight[i]),
+                   bias_initializer=tf.constant_initializer(bias[i]), dtype='float64'))
+    model.summary()
     X = [[] for i in range(number_of_layer + 1)]
 
     for test in range(1000):
@@ -256,13 +274,17 @@ if __name__ == "__main__":
         local_X = X[layer]
         names = get_name(layer - 1)
         for rule in range(number_of_rule):
+            print("Rule: " + str(rule))
             Y = getY(rule, X[number_of_layer])
             decisionTree = decision_tree_analysis(local_X, Y, names)
             traces = extract_decision_tree(decisionTree, names)
+            if len(traces) == 0:
+                print("No properties")
+                continue
             for trace in traces:
                 if layer == 1:
                     input_implication(weight[0], bias[0], trace, names)
             for trace in traces:
-                consecutive_implication(weight[layer], bias[layer], trace, names, 3, rule)
+                layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer, rule)
         print()
 
