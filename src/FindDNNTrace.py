@@ -91,11 +91,16 @@ def get_name(layer):
     return names
 
 
-def getY(rule, Y):
+def getY_final_layer_implication(rule, Y):
     local_Y = []
-
     for example in Y:
         local_Y.append(example[rule] > max([x for i, x in enumerate(example) if i != rule]))
+    return local_Y
+
+def getY_each_layer_implication_activation(rule, Y):
+    local_Y = []
+    for example in Y:
+        local_Y.append(example[rule] > 0)
     return local_Y
 
 
@@ -145,16 +150,17 @@ def decision_tree_analysis(X, Y, names):
 def previous_layer_implication(weight, bias):
     m = len(weight)
     n = len(bias)
-    for layer in range(1, number_of_layer):
+    for layer in range(1, number_of_layer - 1):
+        #imply from this layer to the next layer. 0 is ignored because of no true/false
         local_X = X[layer]
         if layer > 0:
             for case in local_X:
                 for neuron in range(number_of_neurons_each_layer[layer]):
                     case[neuron] = case[neuron] > 0
         names = get_name(layer)
-        for rule in range(number_of_neurons_each_layer[layer]):
+        for rule in range(number_of_neurons_each_layer[layer + 1]):
             print("Layer: " + str(layer) + "\n" + "Rule: " + str(rule))
-            Y = getY(rule, X[layer + 1])
+            Y = getY_each_layer_implication_activation(rule, X[layer + 1])
             if local_X == [] or Y == []:
                 print("No properties")
                 continue
@@ -168,7 +174,7 @@ def previous_layer_implication(weight, bias):
                 layer_layer_implication(weight[layer], bias[layer], trace, names, layer, rule)
         print()
 
-                                        
+
 def input_implication(weight, bias, neuron, names):
     m = len(weight)
     n = len(bias)
@@ -207,74 +213,79 @@ def input_processing(filename):
 
 
 if __name__ == "__main__":
+
     model = Sequential()
     number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, 0, [], [], 0
     filename = sys.argv[1]
     number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing(filename)
     number_of_rule = number_of_neurons_each_layer[-1]
-    #print(number_of_neurons_each_layer)
 
-    activation = 'relu'
-    for i in range(1, number_of_layer):
-        #weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
-        bias[i - 1] = np.array(bias[i - 1]).reshape(number_of_neurons_each_layer[i], 1)
-        #print(weight[i - 1].shape)
-        #print(bias[i - 1].shape)
-        if i == 1:
-            model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[0],),
-                            activation=activation,
-                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-        elif i == number_of_layer - 1:
-            model.add(Dense(number_of_neurons_each_layer[i],
-                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-        else:
-            model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
-                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-    model.summary()
-    # print(weight)
-    # print(bias)
+    import sys
+    original_stdout = sys.stdout
+    with open(filename.replace('.json', '.txt'), 'w') as f:
+        sys.stdout = f  # Change the standard output to the file we created.
+        activation = 'relu'
+        for i in range(1, number_of_layer):
+            #weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
+            bias[i - 1] = np.array(bias[i - 1]).reshape(number_of_neurons_each_layer[i], 1)
+            #print(weight[i - 1].shape)
+            #print(bias[i - 1].shape)
+            if i == 1:
+                model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[0],),
+                                activation=activation,
+                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+            elif i == number_of_layer - 1:
+                model.add(Dense(number_of_neurons_each_layer[i],
+                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+            else:
+                model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
+                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+        model.summary()
+        # print(weight)
+        # print(bias)
 
-    X = [[] for i in range(number_of_layer + 1)]
+        X = [[] for i in range(number_of_layer + 1)]
 
-    for test in range(1000):
-        inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
-        inps.reshape(1, number_of_neurons_each_layer[0])
-        # print(inps)
-        # for layer in model.layers:
-        #     keras_function = K.function([model.input], [layer.output])
-        #     outputs.append(keras_function([inps, 1]))
-        extractor = keras.Model(inputs=model.inputs,
-                                outputs=[layer.output for layer in model.layers])
-        outputs = extractor(inps)
-        X[0].append(inps[0])
-        cnt = 1
-        for layer in outputs:
-            for node in layer.numpy():
-                X[cnt].append(node)
-                cnt += 1
-    previous_layer_implication(weight, bias)
-    print("Each layer to the final output")
-    for layer in range(1, number_of_layer):
-        print("Layer: " + str(layer))
-        local_X = X[layer]
-        names = get_name(layer)
-        for rule in range(number_of_neurons_each_layer[layer]):
-            print("Rule: " + str(rule))
-            Y = getY(rule, X[number_of_layer])
-            if local_X == [] or Y == []:
-                print("No properties")
-                continue
-            decisionTree = decision_tree_analysis(local_X, Y, names)
-            traces = extract_decision_tree(decisionTree, names)
-            if len(traces) == 0:
-                print("No properties")
-                continue
-            for trace in traces:
-                if layer == 1:
-                    input_implication(weight[0], bias[0], trace, names)
-            for trace in traces:
-                layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer, rule)
-        print()
+        for test in range(1000):
+            inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
+            inps.reshape(1, number_of_neurons_each_layer[0])
+            # print(inps)
+            # for layer in model.layers:
+            #     keras_function = K.function([model.input], [layer.output])
+            #     outputs.append(keras_function([inps, 1]))
+            extractor = keras.Model(inputs=model.inputs,
+                                    outputs=[layer.output for layer in model.layers])
+            outputs = extractor(inps)
+            X[0].append(inps[0])
+            cnt = 1
+            for layer in outputs:
+                for node in layer.numpy():
+                    X[cnt].append(node)
+                    cnt += 1
+        previous_layer_implication(weight, bias)
+        print("Each layer to the final output")
+        for layer in range(1, number_of_layer):
+            print("Layer: " + str(layer))
+            local_X = X[layer]
+            names = get_name(layer)
+            for rule in range(number_of_neurons_each_layer[-1]):
+                print("Rule: " + str(rule))
+                Y = getY_final_layer_implication(rule, X[number_of_layer])
+                if local_X == [] or Y == []:
+                    print("No properties")
+                    continue
+                decisionTree = decision_tree_analysis(local_X, Y, names)
+                traces = extract_decision_tree(decisionTree, names)
+                if len(traces) == 0:
+                    print("No properties")
+                    continue
+                for trace in traces:
+                    if layer == 1:
+                        input_implication(weight[0], bias[0], trace, names)
+                for trace in traces:
+                    layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer, rule)
+            print()
+        sys.stdout = original_stdout  # Reset the standard output to its original value
