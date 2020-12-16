@@ -1,0 +1,337 @@
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dense (Dense)                (None, 50)                300
+_________________________________________________________________
+dense_1 (Dense)              (None, 50)                2550
+_________________________________________________________________
+dense_2 (Dense)              (None, 50)                2550
+_________________________________________________________________
+dense_3 (Dense)              (None, 50)                2550
+_________________________________________________________________
+dense_4 (Dense)              (None, 50)                2550
+_________________________________________________________________
+dense_5 (Dense)              (None, 50)                2550
+_________________________________________________________________
+dense_6 (Dense)              (None, 5)                 255
+=================================================================
+Total params: 13,305
+Trainable params: 13,305
+Non-trainable params: 0
+_________________________________________________________________
+Layer: 1
+Rule: 0
+No properties
+Layer: 1
+Rule: 1
+No properties
+Layer: 1
+Rule: 2
+No properties
+Layer: 1
+Rule: 3
+NEURON_1_4 == False and NEURON_1_9 == False and NEURON_1_16 == True and NEURON_1_32 == True and NEURON_1_36 == True => NEURON_2_3
+NEURON_1_4 == False and NEURON_1_9 == True and NEURON_1_16 == True and NEURON_1_32 == True and NEURON_1_33 == True and NEURON_1_36 == True => NEURON_2_3
+NEURON_1_4 == True and NEURON_1_15 == True and NEURON_1_16 == True and NEURON_1_25 == False and NEURON_1_32 == True and NEURON_1_33 == False => NEURON_2_3
+NEURON_1_0 == True and NEURON_1_4 == True and NEURON_1_16 == True and NEURON_1_32 == True and NEURON_1_33 == True and NEURON_1_34 == True and NEURON_1_39 == True => NEURON_2_3
+Layer: 1
+Rule: 4
+No properties
+
+Layer: 2
+Rule: 0
+NEURON_2_0 == False and NEURON_2_10 == False and NEURON_2_14 == False and NEURON_2_15 == False and NEURON_2_46 == False and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_14 == False and NEURON_2_15 == True and NEURON_2_18 == False and NEURON_2_26 == True and NEURON_2_27 == False and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_14 == False and NEURON_2_15 == True and NEURON_2_18 == True and NEURON_2_27 == False and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_14 == False and NEURON_2_15 == True and NEURON_2_27 == True and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_4 == False and NEURON_2_10 == True and NEURON_2_42 == True and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == True and NEURON_2_18 == False and NEURON_2_35 == False and NEURON_2_36 == False and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_0 == True and NEURON_2_23 == False and NEURON_2_35 == True and NEURON_2_48 == False => NEURON_3_0
+NEURON_2_12 == False and NEURON_2_16 == True and NEURON_2_18 == False and NEURON_2_38 == False and NEURON_2_48 == True => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_10 == False and NEURON_2_16 == True and NEURON_2_18 == False and NEURON_2_38 == True and NEURON_2_48 == True => NEURON_3_0
+NEURON_2_0 == False and NEURON_2_16 == True and NEURON_2_17 == False and NEURON_2_18 == True and NEURON_2_31 == True and NEURON_2_46 == False and NEURON_2_48 == True => NEURON_3_0
+NEURON_2_14 == False and NEURON_2_16 == True and NEURON_2_17 == True and NEURON_2_18 == True and NEURON_2_19 == False and NEURON_2_31 == False and NEURON_2_48 == True => NEURON_3_0
+NEURON_2_14 == True and NEURON_2_16 == True and NEURON_2_17 == True and NEURON_2_18 == True and NEURON_2_48 == True => NEURON_3_0
+Layer: 2
+Rule: 1
+No properties
+Layer: 2
+Rule: 2
+No properties
+Layer: 2
+Rule: 3
+NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_23 == True and NEURON_2_25 == False and NEURON_2_26 == False => NEURON_3_3
+NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_23 == True and NEURON_2_25 == False and NEURON_2_26 == True => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_10 == False and NEURON_2_25 == True and NEURON_2_32 == True and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_25 == True and NEURON_2_37 == True => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_3 == True and NEURON_2_5 == False and NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_21 == True and NEURON_2_23 == False and NEURON_2_25 == True and NEURON_2_35 == True and NEURON_2_37 == True => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_3 == True and NEURON_2_4 == False and NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_23 == True and NEURON_2_25 == True and NEURON_2_37 == True => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_3 == True and NEURON_2_4 == True and NEURON_2_10 == False and NEURON_2_14 == True and NEURON_2_15 == True and NEURON_2_23 == True and NEURON_2_25 == True and NEURON_2_37 == True and NEURON_2_44 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_3 == False and NEURON_2_10 == False and NEURON_2_14 == True and NEURON_2_18 == False and NEURON_2_25 == True and NEURON_2_43 == False and NEURON_2_46 == True and NEURON_2_47 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_10 == False and NEURON_2_19 == False and NEURON_2_25 == True and NEURON_2_43 == True and NEURON_2_47 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_10 == False and NEURON_2_24 == True and NEURON_2_25 == True and NEURON_2_32 == True and NEURON_2_44 == False and NEURON_2_47 == True => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_10 == False and NEURON_2_25 == True and NEURON_2_32 == True and NEURON_2_44 == True and NEURON_2_47 == True => NEURON_3_3
+NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_35 == False and NEURON_2_46 == True and NEURON_2_48 == False => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_7 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_46 == False and NEURON_2_47 == False and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_4 == False and NEURON_2_6 == False and NEURON_2_7 == True and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_46 == False and NEURON_2_47 == False and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_46 == False and NEURON_2_47 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_46 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == True and NEURON_2_35 == False and NEURON_2_45 == False and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_24 == False and NEURON_2_27 == True and NEURON_2_35 == False and NEURON_2_41 == True and NEURON_2_45 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_4 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == True and NEURON_2_21 == False and NEURON_2_26 == True and NEURON_2_35 == False and NEURON_2_41 == False and NEURON_2_45 == False and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_4 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == True and NEURON_2_21 == False and NEURON_2_26 == False and NEURON_2_35 == False and NEURON_2_41 == False and NEURON_2_45 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == True and NEURON_2_21 == True and NEURON_2_35 == False and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_6 == False and NEURON_2_8 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_22 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_48 == True and NEURON_2_49 == False => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_6 == False and NEURON_2_8 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_22 == True and NEURON_2_24 == False and NEURON_2_27 == False and NEURON_2_32 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_47 == False and NEURON_2_48 == True and NEURON_2_49 == False => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_3 == True and NEURON_2_6 == False and NEURON_2_8 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_22 == True and NEURON_2_24 == True and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_48 == True and NEURON_2_49 == False => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_6 == False and NEURON_2_8 == True and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_48 == True and NEURON_2_49 == False => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_16 == False and NEURON_2_32 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_48 == True and NEURON_2_49 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_5 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_15 == True and NEURON_2_16 == True and NEURON_2_33 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_44 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_5 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_15 == True and NEURON_2_16 == True and NEURON_2_33 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_41 == False and NEURON_2_44 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_5 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_15 == True and NEURON_2_16 == True and NEURON_2_20 == False and NEURON_2_32 == True and NEURON_2_33 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_41 == True and NEURON_2_44 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_5 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_15 == True and NEURON_2_16 == True and NEURON_2_20 == True and NEURON_2_33 == True and NEURON_2_35 == False and NEURON_2_37 == False and NEURON_2_41 == True and NEURON_2_44 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_3 == False and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_21 == True and NEURON_2_24 == False and NEURON_2_28 == False and NEURON_2_35 == False and NEURON_2_37 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_2 == True and NEURON_2_3 == True and NEURON_2_6 == False and NEURON_2_10 == True and NEURON_2_24 == False and NEURON_2_28 == False and NEURON_2_35 == False and NEURON_2_37 == True and NEURON_2_48 == True => NEURON_3_3
+NEURON_2_4 == False and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_24 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_7 == False and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_22 == False and NEURON_2_23 == False and NEURON_2_25 == False and NEURON_2_26 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_2 == True and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_7 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_22 == False and NEURON_2_23 == False and NEURON_2_25 == False and NEURON_2_26 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_22 == True and NEURON_2_23 == False and NEURON_2_25 == False and NEURON_2_26 == False and NEURON_2_27 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_23 == False and NEURON_2_26 == False and NEURON_2_27 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_23 == True and NEURON_2_26 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == False and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_22 == True and NEURON_2_26 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_12 == False and NEURON_2_18 == False and NEURON_2_20 == False and NEURON_2_23 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_12 == True and NEURON_2_18 == False and NEURON_2_20 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_1 == True and NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_18 == True and NEURON_2_20 == False and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_12 == False and NEURON_2_15 == True and NEURON_2_19 == False and NEURON_2_20 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_6 == True and NEURON_2_10 == True and NEURON_2_12 == True and NEURON_2_15 == True and NEURON_2_19 == True and NEURON_2_20 == True and NEURON_2_35 == False and NEURON_2_37 == False => NEURON_3_3
+NEURON_2_6 == True and NEURON_2_7 == False and NEURON_2_10 == True and NEURON_2_35 == False and NEURON_2_37 == True => NEURON_3_3
+NEURON_2_6 == True and NEURON_2_7 == True and NEURON_2_10 == True and NEURON_2_35 == False and NEURON_2_37 == True and NEURON_2_49 == True => NEURON_3_3
+NEURON_2_10 == True and NEURON_2_15 == False and NEURON_2_20 == False and NEURON_2_28 == False and NEURON_2_31 == True and NEURON_2_35 == True and NEURON_2_47 == False => NEURON_3_3
+NEURON_2_10 == True and NEURON_2_20 == False and NEURON_2_28 == False and NEURON_2_31 == True and NEURON_2_35 == True and NEURON_2_47 == True => NEURON_3_3
+Layer: 2
+Rule: 4
+NEURON_2_8 == True and NEURON_2_15 == False and NEURON_2_25 == True and NEURON_2_26 == True and NEURON_2_27 == False and NEURON_2_31 == False and NEURON_2_35 == False and NEURON_2_45 == False and NEURON_2_46 == False => NEURON_3_4
+NEURON_2_8 == True and NEURON_2_15 == False and NEURON_2_25 == True and NEURON_2_26 == True and NEURON_2_31 == False and NEURON_2_35 == False and NEURON_2_45 == False and NEURON_2_46 == True => NEURON_3_4
+NEURON_2_31 == True and NEURON_2_35 == False and NEURON_2_38 == False => NEURON_3_4
+NEURON_2_10 == False and NEURON_2_20 == True and NEURON_2_31 == True and NEURON_2_33 == False and NEURON_2_35 == False and NEURON_2_38 == True => NEURON_3_4
+NEURON_2_6 == False and NEURON_2_18 == True and NEURON_2_24 == False and NEURON_2_28 == True and NEURON_2_35 == True and NEURON_2_42 == False and NEURON_2_45 == True => NEURON_3_4
+NEURON_2_6 == True and NEURON_2_15 == False and NEURON_2_18 == True and NEURON_2_20 == False and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_42 == False => NEURON_3_4
+NEURON_2_6 == True and NEURON_2_15 == False and NEURON_2_18 == True and NEURON_2_20 == True and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_41 == False and NEURON_2_42 == False => NEURON_3_4
+NEURON_2_6 == True and NEURON_2_15 == False and NEURON_2_18 == True and NEURON_2_20 == True and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_41 == True and NEURON_2_42 == False and NEURON_2_46 == False => NEURON_3_4
+NEURON_2_6 == True and NEURON_2_15 == False and NEURON_2_18 == True and NEURON_2_20 == True and NEURON_2_24 == False and NEURON_2_31 == True and NEURON_2_35 == True and NEURON_2_41 == True and NEURON_2_42 == False and NEURON_2_46 == True => NEURON_3_4
+NEURON_2_4 == False and NEURON_2_5 == False and NEURON_2_6 == True and NEURON_2_9 == True and NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_18 == True and NEURON_2_22 == False and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_42 == False => NEURON_3_4
+NEURON_2_4 == True and NEURON_2_6 == True and NEURON_2_9 == True and NEURON_2_10 == False and NEURON_2_15 == True and NEURON_2_18 == True and NEURON_2_22 == False and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_42 == False => NEURON_3_4
+NEURON_2_6 == True and NEURON_2_9 == True and NEURON_2_10 == True and NEURON_2_15 == True and NEURON_2_18 == True and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_42 == False => NEURON_3_4
+NEURON_2_18 == True and NEURON_2_20 == False and NEURON_2_24 == False and NEURON_2_35 == True and NEURON_2_42 == True and NEURON_2_48 == True => NEURON_3_4
+NEURON_2_12 == False and NEURON_2_18 == True and NEURON_2_24 == True and NEURON_2_29 == False and NEURON_2_35 == True => NEURON_3_4
+
+Layer: 3
+Rule: 0
+No properties
+Layer: 3
+Rule: 1
+No properties
+Layer: 3
+Rule: 2
+No properties
+Layer: 3
+Rule: 3
+NEURON_3_17 == False and NEURON_3_18 == False and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_16 == False and NEURON_3_17 == True and NEURON_3_18 == False and NEURON_3_22 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_18 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_37 == False and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_18 == True and NEURON_3_19 == False and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_16 == False and NEURON_3_18 == True and NEURON_3_19 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_31 == False and NEURON_3_35 == False and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_16 == False and NEURON_3_18 == True and NEURON_3_19 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_31 == False and NEURON_3_35 == True and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_42 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_16 == False and NEURON_3_18 == True and NEURON_3_19 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_31 == True and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_16 == True and NEURON_3_18 == True and NEURON_3_19 == True and NEURON_3_23 == False and NEURON_3_24 == False and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_46 == True => NEURON_4_3
+NEURON_3_10 == False and NEURON_3_17 == False and NEURON_3_18 == False and NEURON_3_23 == False and NEURON_3_31 == True and NEURON_3_38 == True => NEURON_4_3
+NEURON_3_10 == False and NEURON_3_16 == False and NEURON_3_17 == True and NEURON_3_22 == False and NEURON_3_23 == False and NEURON_3_38 == True => NEURON_4_3
+NEURON_3_10 == True and NEURON_3_23 == False and NEURON_3_38 == True => NEURON_4_3
+NEURON_3_10 == True and NEURON_3_17 == False and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_34 == False and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_17 == False and NEURON_3_23 == True and NEURON_3_24 == True and NEURON_3_34 == False and NEURON_3_37 == True and NEURON_3_38 == False and NEURON_3_40 == True => NEURON_4_3
+NEURON_3_1 == False and NEURON_3_9 == False and NEURON_3_12 == False and NEURON_3_20 == False and NEURON_3_22 == True and NEURON_3_23 == True and NEURON_3_26 == False and NEURON_3_34 == True and NEURON_3_35 == False and NEURON_3_38 == False and NEURON_3_42 == True and NEURON_3_43 == False => NEURON_4_3
+NEURON_3_1 == False and NEURON_3_9 == False and NEURON_3_12 == False and NEURON_3_20 == False and NEURON_3_22 == True and NEURON_3_23 == True and NEURON_3_26 == False and NEURON_3_34 == True and NEURON_3_35 == True and NEURON_3_38 == False and NEURON_3_42 == True => NEURON_4_3
+NEURON_3_1 == True and NEURON_3_9 == False and NEURON_3_12 == False and NEURON_3_20 == False and NEURON_3_23 == True and NEURON_3_26 == False and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_42 == True => NEURON_4_3
+NEURON_3_9 == False and NEURON_3_12 == True and NEURON_3_23 == True and NEURON_3_26 == False and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_42 == True => NEURON_4_3
+NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_17 == False and NEURON_3_19 == True and NEURON_3_20 == False and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_26 == True and NEURON_3_34 == True and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_17 == True and NEURON_3_20 == False and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_26 == True and NEURON_3_34 == True and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_0 == True and NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_10 == False and NEURON_3_20 == True and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_26 == True and NEURON_3_31 == False and NEURON_3_34 == True and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_0 == True and NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_10 == True and NEURON_3_19 == False and NEURON_3_20 == True and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_26 == True and NEURON_3_31 == False and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_43 == False => NEURON_4_3
+NEURON_3_0 == True and NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_20 == True and NEURON_3_23 == True and NEURON_3_24 == False and NEURON_3_26 == True and NEURON_3_31 == True and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_40 == False and NEURON_3_43 == True => NEURON_4_3
+NEURON_3_3 == True and NEURON_3_9 == False and NEURON_3_22 == False and NEURON_3_23 == True and NEURON_3_24 == True and NEURON_3_26 == True and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_42 == False and NEURON_3_46 == False => NEURON_4_3
+NEURON_3_3 == True and NEURON_3_4 == False and NEURON_3_9 == False and NEURON_3_22 == True and NEURON_3_23 == True and NEURON_3_24 == True and NEURON_3_26 == True and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_42 == True and NEURON_3_43 == False => NEURON_4_3
+NEURON_3_3 == True and NEURON_3_4 == True and NEURON_3_9 == False and NEURON_3_22 == True and NEURON_3_23 == True and NEURON_3_24 == True and NEURON_3_26 == True and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_42 == True => NEURON_4_3
+NEURON_3_9 == True and NEURON_3_10 == False and NEURON_3_19 == False and NEURON_3_23 == True and NEURON_3_34 == True and NEURON_3_37 == True and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_4 == True and NEURON_3_9 == True and NEURON_3_10 == True and NEURON_3_19 == False and NEURON_3_23 == True and NEURON_3_24 == True and NEURON_3_34 == True and NEURON_3_38 == False and NEURON_3_40 == True => NEURON_4_3
+NEURON_3_9 == True and NEURON_3_19 == True and NEURON_3_23 == True and NEURON_3_34 == True and NEURON_3_37 == False and NEURON_3_38 == False => NEURON_4_3
+NEURON_3_17 == False and NEURON_3_19 == True and NEURON_3_23 == True and NEURON_3_38 == True => NEURON_4_3
+Layer: 3
+Rule: 4
+No properties
+
+Layer: 4
+Rule: 0
+No properties
+Layer: 4
+Rule: 1
+No properties
+Layer: 4
+Rule: 2
+No properties
+Layer: 4
+Rule: 3
+No properties
+Layer: 4
+Rule: 4
+No properties
+
+Layer: 5
+Rule: 0
+No properties
+Layer: 5
+Rule: 1
+No properties
+Layer: 5
+Rule: 2
+No properties
+Layer: 5
+Rule: 3
+No properties
+Layer: 5
+Rule: 4
+NEURON_5_10 == False and NEURON_5_17 == True and NEURON_5_29 == False and NEURON_5_35 == False and NEURON_5_40 == False and NEURON_5_45 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_20 == False and NEURON_5_29 == True and NEURON_5_35 == False and NEURON_5_40 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_20 == True and NEURON_5_23 == False and NEURON_5_29 == True and NEURON_5_34 == False and NEURON_5_35 == False and NEURON_5_40 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_20 == True and NEURON_5_23 == True and NEURON_5_29 == True and NEURON_5_35 == False and NEURON_5_40 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_29 == True and NEURON_5_35 == True and NEURON_5_39 == True and NEURON_5_40 == False => NEURON_6_4
+NEURON_5_6 == True and NEURON_5_10 == True and NEURON_5_20 == False and NEURON_5_23 == True and NEURON_5_28 == False and NEURON_5_34 == False and NEURON_5_37 == False and NEURON_5_38 == False and NEURON_5_40 == False and NEURON_5_42 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_6 == True and NEURON_5_10 == True and NEURON_5_20 == False and NEURON_5_23 == True and NEURON_5_34 == False and NEURON_5_38 == True and NEURON_5_40 == False and NEURON_5_46 == True => NEURON_6_4
+NEURON_5_6 == True and NEURON_5_10 == True and NEURON_5_20 == True and NEURON_5_31 == True and NEURON_5_34 == False and NEURON_5_40 == False => NEURON_6_4
+NEURON_5_6 == True and NEURON_5_10 == True and NEURON_5_15 == True and NEURON_5_29 == True and NEURON_5_34 == True and NEURON_5_39 == False and NEURON_5_40 == False and NEURON_5_42 == False and NEURON_5_46 == False => NEURON_6_4
+NEURON_5_6 == True and NEURON_5_7 == False and NEURON_5_10 == True and NEURON_5_17 == False and NEURON_5_29 == True and NEURON_5_31 == True and NEURON_5_34 == True and NEURON_5_39 == False and NEURON_5_40 == False and NEURON_5_42 == False and NEURON_5_46 == True and NEURON_5_48 == True => NEURON_6_4
+NEURON_5_3 == True and NEURON_5_10 == True and NEURON_5_20 == True and NEURON_5_29 == True and NEURON_5_34 == True and NEURON_5_39 == True and NEURON_5_40 == False => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_17 == True and NEURON_5_36 == False and NEURON_5_40 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_26 == False and NEURON_5_36 == True and NEURON_5_40 == True and NEURON_5_47 == False => NEURON_6_4
+NEURON_5_0 == False and NEURON_5_10 == False and NEURON_5_17 == False and NEURON_5_36 == True and NEURON_5_40 == True and NEURON_5_42 == False and NEURON_5_47 == True and NEURON_5_48 == False => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_17 == False and NEURON_5_36 == True and NEURON_5_40 == True and NEURON_5_47 == True and NEURON_5_48 == True => NEURON_6_4
+NEURON_5_10 == True and NEURON_5_17 == False and NEURON_5_36 == True and NEURON_5_37 == True and NEURON_5_40 == True and NEURON_5_47 == True => NEURON_6_4
+NEURON_5_10 == False and NEURON_5_17 == True and NEURON_5_36 == True and NEURON_5_38 == True and NEURON_5_40 == True and NEURON_5_47 == True and NEURON_5_48 == False => NEURON_6_4
+NEURON_5_10 == True and NEURON_5_17 == True and NEURON_5_36 == True and NEURON_5_38 == True and NEURON_5_40 == True and NEURON_5_45 == True and NEURON_5_47 == True and NEURON_5_48 == False => NEURON_6_4
+NEURON_5_17 == True and NEURON_5_36 == True and NEURON_5_40 == True and NEURON_5_47 == True and NEURON_5_48 == True => NEURON_6_4
+
+Layer: 6
+Rule: 0
+No properties
+Layer: 6
+Rule: 1
+No properties
+Layer: 6
+Rule: 2
+Layer: 6
+Rule: 3
+NEURON_6_4 == False => y_3
+Layer: 6
+Rule: 4
+No properties
+
+Layer: 7
+Rule: 0
+No properties
+Layer: 7
+Rule: 1
+No properties
+Layer: 7
+Rule: 2
+No properties
+Layer: 7
+Rule: 3
+No properties
+Layer: 7
+Rule: 4
+No properties
+
+Each layer to the final output
+Layer: 1
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 2
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 3
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 4
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 5
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 6
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
+
+Layer: 7
+Rule: 0
+No properties
+Rule: 1
+No properties
+Rule: 2
+No properties
+Rule: 3
+No properties
+Rule: 4
+No properties
