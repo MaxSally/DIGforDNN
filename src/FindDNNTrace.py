@@ -222,7 +222,7 @@ if __name__ == "__main__":
 
     import sys
     original_stdout = sys.stdout
-    with open(filename.replace('.json', '.txt'), 'w') as f:
+    with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
         activation = 'relu'
         for i in range(1, number_of_layer):
@@ -244,6 +244,7 @@ if __name__ == "__main__":
                                 kernel_initializer=tf.constant_initializer(weight[i - 1]),
                                 bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
         model.summary()
+
         # print(weight)
         # print(bias)
 
@@ -266,16 +267,17 @@ if __name__ == "__main__":
                     X[cnt].append(node)
                     cnt += 1
         previous_layer_implication(weight, bias)
+
         print("Each layer to the final output")
-        for layer in range(1, number_of_layer):
+        for layer in range(1, number_of_layer - 1):
             print("Layer: " + str(layer))
             local_X = X[layer]
             names = get_name(layer)
             for rule in range(number_of_neurons_each_layer[-1]):
                 print("Rule: " + str(rule))
-                Y = getY_final_layer_implication(rule, X[number_of_layer])
+                Y = getY_final_layer_implication(rule, X[number_of_layer - 1])
                 if local_X == [] or Y == []:
-                    print("No properties")
+                    print("No properties.")
                     continue
                 decisionTree = decision_tree_analysis(local_X, Y, names)
                 traces = extract_decision_tree(decisionTree, names)
@@ -286,6 +288,7 @@ if __name__ == "__main__":
                     if layer == 1:
                         input_implication(weight[0], bias[0], trace, names)
                 for trace in traces:
-                    layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer, rule)
+                    layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer - 1, rule)
             print()
         sys.stdout = original_stdout  # Reset the standard output to its original value
+        #model.save('input_3.pb')
