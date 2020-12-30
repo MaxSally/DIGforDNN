@@ -29,10 +29,10 @@ NEURON_2_1 == True => y_1
 Each layer to the final output
 Layer: 1
 Rule: 0
-1.0.x0 + -1.0.x1 + 0.0 > 0 and 1.0.x0 + 1.0.x1 + 0.0 <= 0 => y_0
+ +1.0x0 -1.0x1 > 0.0 and  +1.0x0 +1.0x1 <= 0.0 => y_0
 NEURON_1_0 == True and NEURON_1_1 == False => y_0
 Rule: 1
-1.0.x0 + -1.0.x1 + 0.0 <= 0 and 1.0.x0 + 1.0.x1 + 0.0 > 0 => y_1
+ +1.0x0 -1.0x1 <= 0.0 and  +1.0x0 +1.0x1 > 0.0 => y_1
 NEURON_1_0 == False and NEURON_1_1 == True => y_1
 
 Layer: 2
