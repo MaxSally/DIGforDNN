@@ -1,3 +1,4 @@
+import os
 import sys
 from copy import deepcopy
 import tensorflow as tf
@@ -26,8 +27,18 @@ class NodePath:
         self.sign = sign
 
 
-def printDT(decisionTree, names):
-    text_representation = tree.export_text(decisionTree, feature_names=names)
+def printDecisionTree(tree, feature_names):
+    '''
+    Outputs decision tree in text representation
+
+    Parameters:
+    -----------
+    tree: decision tree model
+        The decision tree to represent as pseudocode
+    feature_names: list
+        The feature names of the dataset used for building the decision tree
+    '''
+    text_representation = tree.export_text(tree, feature_names=feature_names)
     text_representation = text_representation.replace('<= 0.50', '== FALSE')
     text_representation = text_representation.replace('>  0.50', '== TRUE')
     print(text_representation)
@@ -77,7 +88,14 @@ def extract_decision_tree(tree, feature_names):
     return result
 
 
-def get_name(layer):
+def get_neuron_name_of_layer(layer):
+    '''
+    Outputs a list of neuron names of a layer
+
+    Parameters:
+    -----------
+    layer: layer that user wants to retrieve names for
+    '''
     names = []
     NEURON = ""
     if layer == 0:
@@ -91,27 +109,70 @@ def get_name(layer):
     return names
 
 
-def getY_final_layer_implication(rule, Y):
+def getY_implication_for_final_layer(rule, Y):
+    '''
+    Outputs a list of True if rule is satisfied, false otherwise for each case.
+    Noted: each set of inputs including subsequent outputs at each neurons is considered a case.
+
+    Parameters:
+    -----------
+    rule: rule to considered
+        rule 0 means that y0 is the largest among all output neurons.
+    Y: 2-D array. List of outputs.
+        Each Y[i] contains a list which is the result of each neurons in case i.
+    '''
     local_Y = []
     for example in Y:
         local_Y.append(example[rule] > max([x for i, x in enumerate(example) if i != rule]))
     return local_Y
 
 def getY_each_layer_implication_activation(rule, Y):
+    '''
+    Outputs a list of True if rule is satisfied, false otherwise for each case.
+    Noted: each set of inputs including subsequent outputs at each neurons is considered a case.
+
+    Parameters:
+    -----------
+    rule: rule to considered
+        rule 0 means that y0 is the largest among all output neurons.
+    Y: 2-D array. List of outputs.
+        Each Y[i] contains a list which is the result of each neurons in case i.
+    '''
     local_Y = []
     for example in Y:
         local_Y.append(example[rule] > 0)
     return local_Y
 
 
-def get_implication(layer, rule):
+def get_implication_in_text(layer, rule):
+    '''
+    Outputs implication in text (" => (NEURON_NAME)_(LAYER)_(ORDER_OF_NEURON_IN_THAT_LAYER)
+
+    Parameters:
+    -----------
+    layer: layer to be considered for the rule
+    rule: rule to considered
+        rule 0 means that y0 is the largest among all output neurons.
+    '''
     implication = ""
     NEURON_NAME = ("NEURON_" + str(layer) if layer < number_of_layer - 1 else "y")
     implication = NEURON_NAME + "_" + str(rule)
     return implication
 
 
-def layer_layer_implication(weight, bias, neuron, names, layerI, rule):
+def print_implication_between_two_layers(weight, bias, neuron, names, layerI, rule):
+    '''
+    Outputs implication between two layers in text (layerI and layerI + 1
+
+    Parameters:
+    -----------
+    weight: weight between two layers
+    bias: bias between two layers
+    neuron: contains all neurons to be printed for a specific rule and their result from Decision Tree
+    names: names of neuron in layerI
+    rule: rule to considered
+        rule 0 means that y0 is the largest among all output neurons.
+    '''
     m = len(weight)
     n = len(bias)
     weight = np.array(weight)
@@ -126,12 +187,21 @@ def layer_layer_implication(weight, bias, neuron, names, layerI, rule):
             output += names[i] + " == False"
         result += ("" if result == "" else " and ") + output
     if result != "":
-        implication = get_implication(layerI + 1, rule)
+        implication = get_implication_in_text(layerI + 1, rule)
         result += " => " + implication
         print(result)
 
 
-def decision_tree_analysis(X, Y, names):
+def decision_tree_analysis(X, Y, feature_names):
+    '''
+    Outputs decision tree based of input X and output Y.
+
+    Parameters:
+    -----------
+    X: decision tree input
+    Y; decision tree output
+    feature_names: names of all neurons in the inputs.
+    '''
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=1)
     # Decision Tree
     decisionTree = DecisionTreeClassifier()
@@ -140,7 +210,7 @@ def decision_tree_analysis(X, Y, names):
     Y_pred = decisionTree.predict(X_test)
 
     # print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
-    text_representation = tree.export_text(decisionTree, feature_names=names)
+    text_representation = tree.export_text(decisionTree, feature_names=feature_names)
     text_representation = text_representation.replace('<= 0.50', '== FALSE')
     text_representation = text_representation.replace('>  0.50', '== TRUE')
     # print(text_representation)
@@ -148,6 +218,14 @@ def decision_tree_analysis(X, Y, names):
 
 
 def previous_layer_implication(weight, bias):
+    '''
+    Produce implications between each two consecutive layers.
+
+    Parameters:
+    -----------
+    weight: weight of neural network
+    bias: bias of neural network
+    '''
     m = len(weight)
     n = len(bias)
     for layer in range(1, number_of_layer - 1):
@@ -157,7 +235,7 @@ def previous_layer_implication(weight, bias):
             for case in local_X:
                 for neuron in range(number_of_neurons_each_layer[layer]):
                     case[neuron] = case[neuron] > 0
-        names = get_name(layer)
+        names = get_neuron_name_of_layer(layer)
         for rule in range(number_of_neurons_each_layer[layer + 1]):
             print("Layer: " + str(layer) + "\n" + "Rule: " + str(rule))
             Y = getY_each_layer_implication_activation(rule, X[layer + 1])
@@ -171,39 +249,57 @@ def previous_layer_implication(weight, bias):
                 continue
             # if layer > 0:
             for trace in traces:
-                layer_layer_implication(weight[layer], bias[layer], trace, names, layer, rule)
+                print_implication_between_two_layers(weight[layer], bias[layer], trace, names, layer, rule)
         print()
 
 
-def input_implication(weight, bias, neuron, names):
-    m = len(weight)
+def input_implication(weight, bias, neuron, feature_names):
+    '''
+    Outputs implication between inputs and ouputs in text
+
+    Parameters:
+    -----------
+    weight: weight of the input layer
+    bias: bias of input layer
+    neuron: a map containing all neurons that are considered.
+        Value = 0 means that it is FALSE or <= 0. Value = 1 means that it is TRUE or > 0.
+    '''
+    m = len(weight[0])
     n = len(bias)
     weight = np.array(weight)
     result = ""
     for i in range(n):
         output = ""
         for j in range(m):
-            output += str(weight[i][j]) + ".x" + str(j) + " + "
-        output += str(bias[j][0])
-        if names[i] not in neuron:
+            output += (" +" if weight[i][j] >= 0 else " ") + str(weight[i][j]) + "x" + str(j)
+
+        if feature_names[i] not in neuron:
             continue
-        elif neuron[names[i]][1]:
-            output += " > 0"
+        elif neuron[feature_names[i]][1]:
+            output += " > "
         else:
-            output += " <= 0"
+            output += " <= "
+        output += str(float(-bias[j][0]) if bias[j][0] != 0 else bias[j][0])
         result += ("" if result == "" else " and ") + output
-    implication = get_implication(number_of_layer, rule)
+    implication = get_implication_in_text(number_of_layer, rule)
     result += " => " + implication
     print(result)
 
 
-def input_processing(filename):
+def input_processing(file_path):
+    '''
+    Process input from json file.
+
+    Parameters:
+    -----------
+    file_path: path to json input file. 
+    '''
     data = {}
     number_of_layer = -1
     number_of_neurons_each_layer = []
     weight = []
     bias = []
-    with open(filename, "r") as f:
+    with open(file_path, "r") as f:
         data = json.load(f)
         weight = data["weight"]
         bias = data["bias"]
@@ -272,10 +368,10 @@ if __name__ == "__main__":
         for layer in range(1, number_of_layer - 1):
             print("Layer: " + str(layer))
             local_X = X[layer]
-            names = get_name(layer)
+            names = get_neuron_name_of_layer(layer)
             for rule in range(number_of_neurons_each_layer[-1]):
                 print("Rule: " + str(rule))
-                Y = getY_final_layer_implication(rule, X[number_of_layer - 1])
+                Y = getY_implication_for_final_layer(rule, X[number_of_layer - 1])
                 if local_X == [] or Y == []:
                     print("No properties.")
                     continue
@@ -287,8 +383,9 @@ if __name__ == "__main__":
                 for trace in traces:
                     if layer == 1:
                         input_implication(weight[0], bias[0], trace, names)
+
                 for trace in traces:
-                    layer_layer_implication(weight[layer], bias[layer], trace, names, number_of_layer - 1, rule)
+                    print_implication_between_two_layers(weight[layer], bias[layer], trace, names, number_of_layer - 1, rule)
             print()
         sys.stdout = original_stdout  # Reset the standard output to its original value
-        #model.save('input_3.pb')
+        tf.saved_model.save(model, 'input_1')
