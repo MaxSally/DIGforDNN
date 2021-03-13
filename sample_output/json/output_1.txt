@@ -91,5 +91,5 @@ i: 1
 ('rlimit count', 206)
 ('max memory', 2.89)
 ('memory', 2.66)
-('time', 0.005)
+('time', 0.007)
 sat

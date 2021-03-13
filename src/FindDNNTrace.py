@@ -318,7 +318,7 @@ def check_input_constraint(test_input, weight, bias, trace):
     return second_layer == trace
 
 
-def checker_tool_non_input_layer()
+def checker_tool_non_input_layer():
     X = [[] for i in range(number_of_layer + 1)]
     number_of_tests = 10
     for test in range(number_of_tests):
