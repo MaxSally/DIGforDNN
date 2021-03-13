@@ -1,6 +1,8 @@
 import os
 import sys
 from copy import deepcopy
+
+import onnxruntime as onnxruntime
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
@@ -14,6 +16,7 @@ import onnx
 from onnx_tf.backend import prepare
 import onnx2keras
 from onnx2keras import onnx_to_keras
+import z3
 
 
 class NodePath:
@@ -56,8 +59,8 @@ def extract_decision_tree(tree, feature_names):
         The feature names of the dataset used for building the decision tree
     '''
 
-    left = tree.tree_.children_left
-    right = tree.tree_.children_right
+    left_subtree = tree.tree_.children_left
+    right_subtree = tree.tree_.children_right
     threshold = tree.tree_.threshold
     features = [feature_names[i] for i in tree.tree_.feature]
     value = tree.tree_.value
@@ -84,7 +87,7 @@ def extract_decision_tree(tree, feature_names):
                     case[nodePath.name] = [round(nodePath.threshold, 2), nodePath.sign]
                 result.append(case)
 
-    recurse(left, right, threshold, features, 0, path)
+    recurse(left_subtree, right_subtree, threshold, features, 0, path)
     return result
 
 
@@ -105,7 +108,7 @@ def get_neuron_name_of_layer(layer):
     else:
         NEURON = "NEURON_" + str(layer)
     for i in range(number_of_neurons_each_layer[layer]):
-        names.append(NEURON + "_" +  str(i))
+        names.append(NEURON + "_" + str(i))
     return names
 
 
@@ -125,6 +128,7 @@ def getY_implication_for_final_layer(rule, Y):
     for example in Y:
         local_Y.append(example[rule] > max([x for i, x in enumerate(example) if i != rule]))
     return local_Y
+
 
 def getY_each_layer_implication_activation(rule, Y):
     '''
@@ -213,7 +217,7 @@ def decision_tree_analysis(X, Y, feature_names):
     text_representation = tree.export_text(decisionTree, feature_names=feature_names)
     text_representation = text_representation.replace('<= 0.50', '== FALSE')
     text_representation = text_representation.replace('>  0.50', '== TRUE')
-    # print(text_representation)
+    print(text_representation)
     return decisionTree
 
 
@@ -229,7 +233,7 @@ def previous_layer_implication(weight, bias):
     m = len(weight)
     n = len(bias)
     for layer in range(1, number_of_layer - 1):
-        #imply from this layer to the next layer. 0 is ignored because of no true/false
+        # imply from this layer to the next layer. 0 is ignored because of no true/false
         local_X = X[layer]
         if layer > 0:
             for case in local_X:
@@ -249,7 +253,9 @@ def previous_layer_implication(weight, bias):
                 continue
             # if layer > 0:
             for trace in traces:
+                print(trace)
                 print_implication_between_two_layers(weight[layer], bias[layer], trace, names, layer, rule)
+
         print()
 
 
@@ -271,8 +277,7 @@ def input_implication(weight, bias, neuron, feature_names):
     for i in range(n):
         output = ""
         for j in range(m):
-            output += (" +" if weight[i][j] >= 0 else " ") + str(weight[i][j]) + "x" + str(j)
-
+            output += (" +" if weight[j][i] >= 0 else " ") + str(weight[j][i]) + "x" + str(j)
         if feature_names[i] not in neuron:
             continue
         elif neuron[feature_names[i]][1]:
@@ -286,7 +291,7 @@ def input_implication(weight, bias, neuron, feature_names):
     print(result)
 
 
-def input_processing(file_path):
+def input_processing_json(file_path):
     '''
     Process input from json file.
 
@@ -308,24 +313,146 @@ def input_processing(file_path):
     return number_of_layer, number_of_neurons_each_layer, weight, bias
 
 
+def check_input_constraint(test_input, weight, bias, trace):
+    second_layer = np.cross(test_input, weight) > 0
+    return second_layer == trace
+
+
+def checker_tool_non_input_layer()
+    X = [[] for i in range(number_of_layer + 1)]
+    number_of_tests = 10
+    for test in range(number_of_tests):
+        inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
+        inps.reshape(1, number_of_neurons_each_layer[0])
+        # print(inps)
+        # for layer in model.layers:
+        #     keras_function = K.function([model.input], [layer.output])
+        #     outputs.append(keras_function([inps, 1]))
+        extractor = keras.Model(inputs=model.inputs,
+                                outputs=[layer.output for layer in model.layers])
+        outputs = extractor(inps)
+        X[0].append(inps[0])
+        cnt = 1
+        for layer in outputs:
+            X[cnt].append(layer.numpy()[0])
+            cnt += 1
+
+def checker_tool_input(model, weight, bias, number_of_layer, trace, names):
+    cntT = 0
+    cntF = 0
+    test_X = [[] for i in range(number_of_layer + 1)]
+    number_of_tests = 10
+    test = 0
+    #inv_weight = np.array(weight).T
+    print(weight)
+    print(bias)
+    inps = {}
+    print(names)
+    for i in range(len(bias)):
+        print("i: " + str(i))
+        variable = "x" + str(i)
+        inps[variable] = z3.Real(variable)
+    j = 0
+    selected = {}
+    print(selected)
+    equation_list = []
+    for name in names:
+        if name in trace:
+            z = z3.Real('z')
+            z = bias[j][0]
+            for i in range(len(bias)):
+                variable = "x" + str(i)
+                z = z + (inps[variable] * weight[i][j])
+            z = z > 0 if trace[name][1] > 0 else z <= 0
+            print(z)
+            equation_list.append(z)
+        j += 1
+    print(equation_list)
+    equation = [equa for equa in equation_list]
+    s = z3.Solver()
+    while test < number_of_tests:
+        #equation = z3.And(equation, )
+        s.add(equation)
+        ans = s.check()
+        print(s)
+        for c in s.statistics():
+            print(c)
+        #ans = z3.solve(equation)
+        print(ans)
+        exit(0)
+        #inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
+        #inps.reshape(1, number_of_neurons_each_layer[0])
+        # print(inps)
+        # for layer in model.layers:
+        #     keras_function = K.function([model.input], [layer.output])
+        #     outputs.append(keras_function([inps, 1]))
+        extractor = keras.Model(inputs=model.inputs,
+                                outputs=[layer.output for layer in model.layers])
+        outputs = extractor(inps)
+        print("here")
+        print(trace)
+        print(check_input_constraint(inps[0], weight, bias, trace))
+
+        test_X[0].append(inps[0])
+
+        cnt = 1
+        for layer in outputs:
+            test_X[cnt].append(layer.numpy()[0])
+            cnt += 1
+        test += 1
+    print(cntT)
+    print(cntF)
+
+
+def input_processing_onnx():
+    onnx_model = onnx.load_model('../sample_input/eranmnist_benchmark/onnx/tf/mnist_relu_3_50.onnx')
+    kera_model = onnx_to_keras(onnx_model, input_names=['0'])
+    print(kera_model.summary())
+    number_of_layer = 0
+    number_of_neurons_each_layer = []
+    weight = []
+    bias = []
+    for layer in kera_model.layers:
+        layer_weight = layer.get_weights()
+        if not layer_weight:
+            continue
+        number_of_layer += 1
+        if number_of_layer == 1:
+            number_of_neurons_each_layer.append(np.array(layer_weight[0]).shape[0])
+        number_of_neurons_each_layer.append(np.array(layer_weight[0]).shape[1])
+        weight.append(np.array(layer_weight[0]))
+        bias.append(np.array(layer_weight[1]))
+    number_of_layer += 1
+    print(number_of_layer)
+    print(number_of_neurons_each_layer)
+    print(weight)
+    print(bias)
+    return number_of_layer, number_of_neurons_each_layer, weight, bias
+
+
 if __name__ == "__main__":
+
+    # input_processing_onnx()
+    # exit()
 
     model = Sequential()
     number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, 0, [], [], 0
     filename = sys.argv[1]
-    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing(filename)
+    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
     number_of_rule = number_of_neurons_each_layer[-1]
 
     import sys
+
     original_stdout = sys.stdout
+    number_of_tests = 500
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
         activation = 'relu'
         for i in range(1, number_of_layer):
-            #weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
+            # weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
             bias[i - 1] = np.array(bias[i - 1]).reshape(number_of_neurons_each_layer[i], 1)
-            #print(weight[i - 1].shape)
-            #print(bias[i - 1].shape)
+            # print(weight[i - 1].shape)
+            # print(bias[i - 1].shape)
             if i == 1:
                 model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[0],),
                                 activation=activation,
@@ -346,7 +473,7 @@ if __name__ == "__main__":
 
         X = [[] for i in range(number_of_layer + 1)]
 
-        for test in range(1000):
+        for test in range(number_of_tests):
             inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
             inps.reshape(1, number_of_neurons_each_layer[0])
             # print(inps)
@@ -359,9 +486,10 @@ if __name__ == "__main__":
             X[0].append(inps[0])
             cnt = 1
             for layer in outputs:
-                for node in layer.numpy():
-                    X[cnt].append(node)
-                    cnt += 1
+                X[cnt].append(layer.numpy()[0])
+                cnt += 1
+        # checker_tool()
+        # exit()
         previous_layer_implication(weight, bias)
 
         print("Each layer to the final output")
@@ -383,9 +511,16 @@ if __name__ == "__main__":
                 for trace in traces:
                     if layer == 1:
                         input_implication(weight[0], bias[0], trace, names)
-
+                    checker_tool_input(model, weight[0], bias[0], number_of_layer, trace, names)
                 for trace in traces:
-                    print_implication_between_two_layers(weight[layer], bias[layer], trace, names, number_of_layer - 1, rule)
+                    print_implication_between_two_layers(weight[layer], bias[layer], trace, names, number_of_layer - 1,
+                                                         rule)
             print()
         sys.stdout = original_stdout  # Reset the standard output to its original value
         tf.saved_model.save(model, 'input_1')
+
+    import keras2onnx
+
+    onnx_model = keras2onnx.convert_keras(model, "test")
+    filename_output_onnx = filename.replace('.json', '.onnx').replace('json', 'onnx')
+    keras2onnx.save_model(onnx_model, filename_output_onnx)

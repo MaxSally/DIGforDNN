@@ -16,64 +16,185 @@ Non-trainable params: 0
 _________________________________________________________________
 Layer: 1
 Rule: 0
-NEURON_1_0 == False and NEURON_1_1 == False and NEURON_1_2 == True => NEURON_2_0
-NEURON_1_0 == False and NEURON_1_1 == True => NEURON_2_0
-NEURON_1_0 == True => NEURON_2_0
+|--- NEURON_1_2 == FALSE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- NEURON_1_1 == FALSE
+|   |   |   |--- class: False
+|   |   |--- NEURON_1_1 == TRUE
+|   |   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_2 == TRUE
+|   |--- class: True
+
+{'NEURON_1_2': [0.5, 0], 'NEURON_1_0': [0.5, 0], 'NEURON_1_1': [0.5, 1]}
+NEURON_1_0 == False and NEURON_1_1 == True and NEURON_1_2 == False => NEURON_2_0
+{'NEURON_1_2': [0.5, 0], 'NEURON_1_0': [0.5, 1]}
+NEURON_1_0 == True and NEURON_1_2 == False => NEURON_2_0
+{'NEURON_1_2': [0.5, 1]}
+NEURON_1_2 == True => NEURON_2_0
 Layer: 1
 Rule: 1
+|--- NEURON_1_2 == FALSE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- class: False
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_2 == TRUE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- NEURON_1_1 == FALSE
+|   |   |   |--- class: True
+|   |   |--- NEURON_1_1 == TRUE
+|   |   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: True
+
+{'NEURON_1_2': [0.5, 0], 'NEURON_1_0': [0.5, 1]}
+NEURON_1_0 == True and NEURON_1_2 == False => NEURON_2_1
+{'NEURON_1_2': [0.5, 1], 'NEURON_1_0': [0.5, 0], 'NEURON_1_1': [0.5, 0]}
 NEURON_1_0 == False and NEURON_1_1 == False and NEURON_1_2 == True => NEURON_2_1
-NEURON_1_0 == True => NEURON_2_1
+{'NEURON_1_2': [0.5, 1], 'NEURON_1_0': [0.5, 1]}
+NEURON_1_0 == True and NEURON_1_2 == True => NEURON_2_1
 Layer: 1
 Rule: 2
-NEURON_1_0 == True and NEURON_1_2 == False => NEURON_2_2
+|--- NEURON_1_0 == FALSE
+|   |--- class: False
+|--- NEURON_1_0 == TRUE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- NEURON_1_2 == FALSE
+|   |   |   |--- class: True
+|   |   |--- NEURON_1_2 == TRUE
+|   |   |   |--- class: True
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- NEURON_1_2 == FALSE
+|   |   |   |--- class: True
+|   |   |--- NEURON_1_2 == TRUE
+|   |   |   |--- class: False
+
+{'NEURON_1_0': [0.5, 1], 'NEURON_1_1': [0.5, 0], 'NEURON_1_2': [0.5, 0]}
+NEURON_1_0 == True and NEURON_1_1 == False and NEURON_1_2 == False => NEURON_2_2
+{'NEURON_1_0': [0.5, 1], 'NEURON_1_1': [0.5, 1], 'NEURON_1_2': [0.5, 0]}
+NEURON_1_0 == True and NEURON_1_1 == True and NEURON_1_2 == False => NEURON_2_2
 
 Layer: 2
 Rule: 0
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+{'NEURON_2_0': [0.5, 1]}
 NEURON_2_0 == True => NEURON_3_0
 Layer: 2
 Rule: 1
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+{'NEURON_2_0': [0.5, 1]}
 NEURON_2_0 == True => NEURON_3_1
 Layer: 2
 Rule: 2
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- NEURON_2_2 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_2_2 == TRUE
+|   |   |--- class: True
+
+{'NEURON_2_1': [0.5, 1], 'NEURON_2_2': [0.5, 1]}
 NEURON_2_1 == True and NEURON_2_2 == True => NEURON_3_2
 
 Layer: 3
 Rule: 0
+|--- NEURON_3_1 == FALSE
+|   |--- class: False
+|--- NEURON_3_1 == TRUE
+|   |--- class: True
+
+{'NEURON_3_1': [0.5, 1]}
 NEURON_3_1 == True => y_0
 Layer: 3
 Rule: 1
-NEURON_3_0 == True => y_1
+|--- NEURON_3_1 == FALSE
+|   |--- class: False
+|--- NEURON_3_1 == TRUE
+|   |--- class: True
+
+{'NEURON_3_1': [0.5, 1]}
+NEURON_3_1 == True => y_1
 Layer: 3
 Rule: 2
-NEURON_3_0 == True => y_2
+|--- NEURON_3_1 == FALSE
+|   |--- class: False
+|--- NEURON_3_1 == TRUE
+|   |--- class: True
+
+{'NEURON_3_1': [0.5, 1]}
+NEURON_3_1 == True => y_2
 
 Each layer to the final output
 Layer: 1
 Rule: 0
--0.7.x0 + 0.2.x1 + 0.1.x2 + 0.0 <= 0 and -0.5.x0 + 0.2.x1 + 0.5.x2 + 0.0 > 0 and -0.3.x0 + 0.6.x1 + 1.0.x2 + 0.0 <= 0 => y_0
--0.7.x0 + 0.2.x1 + 0.1.x2 + 0.0 > 0 and -0.3.x0 + 0.6.x1 + 1.0.x2 + 0.0 <= 0 => y_0
--0.3.x0 + 0.6.x1 + 1.0.x2 + 0.0 > 0 => y_0
+|--- NEURON_1_2 == FALSE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- NEURON_1_1 == FALSE
+|   |   |   |--- class: False
+|   |   |--- NEURON_1_1 == TRUE
+|   |   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_2 == TRUE
+|   |--- class: True
+
+ -0.7x0 +0.2x1 +0.1x2 <= 0.0 and  -0.5x0 +0.2x1 +0.5x2 > 0.0 and  -0.3x0 +0.6x1 +1.0x2 <= 0.0 => y_0
+ -0.7x0 +0.2x1 +0.1x2 > 0.0 and  -0.3x0 +0.6x1 +1.0x2 <= 0.0 => y_0
+ -0.3x0 +0.6x1 +1.0x2 > 0.0 => y_0
 NEURON_1_0 == False and NEURON_1_1 == True and NEURON_1_2 == False => y_0
 NEURON_1_0 == True and NEURON_1_2 == False => y_0
 NEURON_1_2 == True => y_0
 Rule: 1
+|--- class: 0
+
 No properties
 Rule: 2
+|--- class: 0
+
 No properties
 
 Layer: 2
 Rule: 0
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
 NEURON_2_0 == True => y_0
 Rule: 1
+|--- class: 0
+
 No properties
 Rule: 2
+|--- class: 0
+
 No properties
 
 Layer: 3
 Rule: 0
+|--- NEURON_3_0 == FALSE
+|   |--- class: False
+|--- NEURON_3_0 == TRUE
+|   |--- class: True
+
 NEURON_3_0 == True => y_0
 Rule: 1
+|--- class: 0
+
 No properties
 Rule: 2
+|--- class: 0
+
 No properties
 

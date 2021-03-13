@@ -14,30 +14,82 @@ Non-trainable params: 0
 _________________________________________________________________
 Layer: 1
 Rule: 0
+|--- NEURON_1_0 == FALSE
+|   |--- class: False
+|--- NEURON_1_0 == TRUE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+
+{'NEURON_1_0': [0.5, 1], 'NEURON_1_1': [0.5, 0]}
 NEURON_1_0 == True and NEURON_1_1 == False => NEURON_2_0
 Layer: 1
 Rule: 1
+|--- NEURON_1_1 == FALSE
+|   |--- class: False
+|--- NEURON_1_1 == TRUE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: False
+
+{'NEURON_1_1': [0.5, 1], 'NEURON_1_0': [0.5, 0]}
 NEURON_1_0 == False and NEURON_1_1 == True => NEURON_2_1
 
 Layer: 2
 Rule: 0
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+{'NEURON_2_0': [0.5, 1]}
 NEURON_2_0 == True => y_0
 Layer: 2
 Rule: 1
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- class: True
+
+{'NEURON_2_1': [0.5, 1]}
 NEURON_2_1 == True => y_1
 
 Each layer to the final output
 Layer: 1
 Rule: 0
+|--- NEURON_1_0 == FALSE
+|   |--- class: False
+|--- NEURON_1_0 == TRUE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+
  +1.0x0 -1.0x1 > 0.0 and  +1.0x0 +1.0x1 <= 0.0 => y_0
-NEURON_1_0 == True and NEURON_1_1 == False => y_0
-Rule: 1
- +1.0x0 -1.0x1 <= 0.0 and  +1.0x0 +1.0x1 > 0.0 => y_1
-NEURON_1_0 == False and NEURON_1_1 == True => y_1
-
-Layer: 2
-Rule: 0
-NEURON_2_0 == True => y_0
-Rule: 1
-NEURON_2_1 == True => y_1
-
+[[1.0, 1.0], [-1.0, 1.0]]
+[[0.]
+ [0.]]
+['NEURON_1_0', 'NEURON_1_1']
+i: 0
+i: 1
+{}
+0 + x0*1 + x1*-1 > 0
+0 + x0*1 + x1*1 <= 0
+[0 + x0*1 + x1*-1 > 0, 0 + x0*1 + x1*1 <= 0]
+[0 + x0*1 + x1*-1 > 0, 0 + x0*1 + x1*1 <= 0]
+('final checks', 1)
+('num checks', 1)
+('mk bool var', 2)
+('arith-lower', 1)
+('arith-upper', 1)
+('arith-make-feasible', 1)
+('arith-max-columns', 8)
+('arith-max-rows', 2)
+('num allocs', 249098)
+('rlimit count', 206)
+('max memory', 2.89)
+('memory', 2.66)
+('time', 0.005)
+sat
