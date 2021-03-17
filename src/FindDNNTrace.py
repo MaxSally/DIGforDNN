@@ -297,7 +297,14 @@ def input_processing_json(file_path):
 
     Parameters:
     -----------
-    file_path: path to json input file. 
+    file_path: path to json input file.
+
+    Return
+    -----------
+    number_of_layer: Number of layers in the neural network
+    number_of_neurons_each_layer: list of number of neurons in each layer
+    weight: list of weights of the neurons network
+    bias: list of bias at each layer
     '''
     data = {}
     number_of_layer = -1
@@ -314,11 +321,22 @@ def input_processing_json(file_path):
 
 
 def check_input_constraint(test_input, weight, bias, trace):
+    '''
+    :param test_input: genereated inputs
+    :param weight: weight of the first layer
+    :param bias: bias of the first layer
+    :param trace: proposed properties
+    :return:
+    True or False whether the test_input satisfies the trace.
+    '''
     second_layer = np.cross(test_input, weight) > 0
     return second_layer == trace
 
 
 def checker_tool_non_input_layer():
+    '''
+    still developing not in used right now.
+    '''
     X = [[] for i in range(number_of_layer + 1)]
     number_of_tests = 10
     for test in range(number_of_tests):
@@ -338,6 +356,19 @@ def checker_tool_non_input_layer():
             cnt += 1
 
 def checker_tool_input(model, weight, bias, number_of_layer, trace, names):
+    '''
+    Generate inputs according to some restriction to test proposed properties (still developing)
+    Use Z3solver.
+
+    :param model: model evaluating
+    :param weight: weight of the first layer
+    :param bias: bias of the first layer
+    :param number_of_layer: number of layers in the neural network
+    :param trace: proposed properties
+    :param names: names of the neurons in that layers. Used to understand trace
+    :return:
+    True or False whether the properties are satisfied with randomly generated inputs. Not guaranteed that the properties are true.
+    '''
     cntT = 0
     cntF = 0
     test_X = [[] for i in range(number_of_layer + 1)]
@@ -368,15 +399,16 @@ def checker_tool_input(model, weight, bias, number_of_layer, trace, names):
             equation_list.append(z)
         j += 1
     print(equation_list)
-    equation = [equa for equa in equation_list]
+    equations = [equation for equation in equation_list]
     s = z3.Solver()
     while test < number_of_tests:
         #equation = z3.And(equation, )
-        s.add(equation)
-        ans = s.check()
-        print(s)
-        for c in s.statistics():
-            print(c)
+        s.add(equations)
+        s.check()
+        ans = s.model()
+        for it in ans:
+            print(it)
+            print(type(it))
         #ans = z3.solve(equation)
         print(ans)
         exit(0)
@@ -404,7 +436,21 @@ def checker_tool_input(model, weight, bias, number_of_layer, trace, names):
     print(cntF)
 
 
-def input_processing_onnx():
+def input_processing_onnx(file_path=None):
+    '''
+    Process input from onnx file.
+
+    Parameters:
+    -----------
+    file_path: path to onnx input file. (still in developed)
+
+    Return
+    -----------
+    number_of_layer: Number of layers in the neural network
+    number_of_neurons_each_layer: list of number of neurons in each layer
+    weight: list of weights of the neurons network
+    bias: list of bias at each layer
+    '''
     onnx_model = onnx.load_model('../sample_input/eranmnist_benchmark/onnx/tf/mnist_relu_3_50.onnx')
     kera_model = onnx_to_keras(onnx_model, input_names=['0'])
     print(kera_model.summary())

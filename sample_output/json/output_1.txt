@@ -78,18 +78,8 @@ i: 1
 0 + x0*1 + x1*-1 > 0
 0 + x0*1 + x1*1 <= 0
 [0 + x0*1 + x1*-1 > 0, 0 + x0*1 + x1*1 <= 0]
-[0 + x0*1 + x1*-1 > 0, 0 + x0*1 + x1*1 <= 0]
-('final checks', 1)
-('num checks', 1)
-('mk bool var', 2)
-('arith-lower', 1)
-('arith-upper', 1)
-('arith-make-feasible', 1)
-('arith-max-columns', 8)
-('arith-max-rows', 2)
-('num allocs', 249098)
-('rlimit count', 206)
-('max memory', 2.89)
-('memory', 2.66)
-('time', 0.007)
-sat
+x1
+<class 'z3.z3.FuncDeclRef'>
+x0
+<class 'z3.z3.FuncDeclRef'>
+[x1 = -1/2, x0 = 0]
