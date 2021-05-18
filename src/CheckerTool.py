@@ -7,7 +7,7 @@ def checker_tool_non_input_layer():
     still developing not in used right now.
     '''
     X = [[] for i in range(number_of_layer + 1)]
-    number_of_tests = 10
+    number_of_tests = 100
     for test in range(number_of_tests):
         inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
         inps.reshape(1, number_of_neurons_each_layer[0])
@@ -44,7 +44,7 @@ def checker_tool_input(model, weight, bias, number_of_layer, number_of_neurons_e
     cntT = 0
     cntF = 0
     test_X = [[] for i in range(number_of_layer)]
-    number_of_tests = 20
+    number_of_tests = 100
     test = 0
     inputs_variables_name = {}
     for i in range(len(bias)):

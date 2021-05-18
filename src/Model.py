@@ -4,6 +4,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 from sklearn.model_selection import train_test_split
 
+
+NO_PROPERTY_MESSAGE = "No properties"
+
 class NodePath:
     name = ""
     threshold = 0
@@ -246,12 +249,15 @@ def previous_layer_implication(X, weight, bias, number_of_layer, number_of_neuro
             print("Layer: " + str(layer) + "\n" + "Rule: " + str(rule))
             Y = getY_each_layer_implication_activation(rule, X[layer + 1])
             if local_X == [] or Y == []:
-                print("No properties")
+                print(NO_PROPERTY_MESSAGE)
+                print("local_X: ", local_X)
+                print("Y: ", Y)
                 continue
             decisionTree = decision_tree_analysis(local_X, Y, names)
             traces = extract_decision_tree(decisionTree, names)
+            print(traces)
             if len(traces) == 0:
-                print("No properties")
+                print(NO_PROPERTY_MESSAGE)
                 continue
             # if layer > 0:
             for trace in traces:

@@ -15,7 +15,7 @@ Main file is 'FindDnnTrace.py'.
 
 3. Example:
 - Let say we want to find property of model 1 (stored in `sample_input/json/sample_input_1.json` or `sample_input/onnx/sample_input_1.onnx`).
-- Use command `python FindDNNTrace.py sample_input/json/sample_input_1.json`
+- Use command `python FindDNNTrace.py ../sample_input/json/sample_input_1.json`
 - The output will get written to `sample_output/json/sample_output_1.txt` or `sample_output/onnx/sample_output_1.txt` depend on input parameter.
 - An abridged version of output:
 ```Layer: 1

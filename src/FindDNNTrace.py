@@ -87,13 +87,14 @@ if __name__ == "__main__":
                 for trace in traces:
                     if layer == 1:
                         input_implication(weight[0], bias[0], number_of_layer, trace, names, rule)
+                    print(trace)
                     checker_tool_input(model, weight[0], bias[0], number_of_layer, number_of_neurons_each_layer, rule, names, trace)
                 for trace in traces:
                     print_implication_between_two_layers(weight[layer], bias[layer], number_of_layer, trace, names, number_of_layer - 1,
                                                          rule)
             print()
         sys.stdout = original_stdout  # Reset the standard output to its original value
-        tf.saved_model.save(model, 'input_1')
+        tf.saved_model.save(model, filename.replace('.json', ''))
 
     import keras2onnx
 
