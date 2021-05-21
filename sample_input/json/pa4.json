@@ -1,0 +1,232 @@
+{
+  "irVersion": "4",
+  "producerName": "keras2onnx",
+  "producerVersion": "1.7.0",
+  "domain": "onnxmltools",
+  "modelVersion": "0",
+  "docString": "",
+  "graph": {
+    "node": [
+      {
+        "input": [
+          "dense_input",
+          "dense/kernel:0"
+        ],
+        "output": [
+          "dense0"
+        ],
+        "name": "dense",
+        "opType": "MatMul",
+        "docString": "",
+        "domain": ""
+      },
+      {
+        "input": [
+          "dense0",
+          "dense/bias:0"
+        ],
+        "output": [
+          "biased_tensor_name2"
+        ],
+        "name": "Add2",
+        "opType": "Add",
+        "domain": ""
+      },
+      {
+        "input": [
+          "biased_tensor_name2"
+        ],
+        "output": [
+          "dense/Relu:0"
+        ],
+        "name": "Relu1",
+        "opType": "Relu",
+        "domain": ""
+      },
+      {
+        "input": [
+          "dense/Relu:0",
+          "dense_1/kernel:0"
+        ],
+        "output": [
+          "dense_10"
+        ],
+        "name": "dense_1",
+        "opType": "MatMul",
+        "domain": ""
+      },
+      {
+        "input": [
+          "dense_10",
+          "dense_1/bias:0"
+        ],
+        "output": [
+          "biased_tensor_name1"
+        ],
+        "name": "Add1",
+        "opType": "Add",
+        "domain": ""
+      },
+      {
+        "input": [
+          "biased_tensor_name1"
+        ],
+        "output": [
+          "dense_1/Relu:0"
+        ],
+        "name": "Relu",
+        "opType": "Relu",
+        "domain": ""
+      },
+      {
+        "input": [
+          "dense_1/Relu:0",
+          "dense_2/kernel:0"
+        ],
+        "output": [
+          "dense_20"
+        ],
+        "name": "dense_2",
+        "opType": "MatMul",
+        "domain": ""
+      },
+      {
+        "input": [
+          "dense_20",
+          "dense_2/bias:0"
+        ],
+        "output": [
+          "dense_2"
+        ],
+        "name": "Add",
+        "opType": "Add",
+        "docString": "",
+        "domain": ""
+      }
+    ],
+    "name": "test",
+    "initializer": [
+      {
+        "dims": [
+          "2",
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          1.0,
+          -1.0,
+          -1.0,
+          1.0
+        ],
+        "name": "dense_2/kernel:0"
+      },
+      {
+        "dims": [
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          0.0,
+          0.0
+        ],
+        "name": "dense_2/bias:0"
+      },
+      {
+        "dims": [
+          "2",
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          0.5,
+          -0.5,
+          -0.2,
+          0.1
+        ],
+        "name": "dense_1/kernel:0"
+      },
+      {
+        "dims": [
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          0.0,
+          0.0
+        ],
+        "name": "dense_1/bias:0"
+      },
+      {
+        "dims": [
+          "2",
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          1.0,
+          1.0,
+          -1.0,
+          1.0
+        ],
+        "name": "dense/kernel:0"
+      },
+      {
+        "dims": [
+          "2"
+        ],
+        "dataType": 1,
+        "floatData": [
+          0.0,
+          0.0
+        ],
+        "name": "dense/bias:0"
+      }
+    ],
+    "input": [
+      {
+        "name": "dense_input",
+        "type": {
+          "tensorType": {
+            "elemType": 11,
+            "shape": {
+              "dim": [
+                {
+                  "dimParam": "N"
+                },
+                {
+                  "dimValue": "2"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "output": [
+      {
+        "name": "dense_2",
+        "type": {
+          "tensorType": {
+            "elemType": 11,
+            "shape": {
+              "dim": [
+                {
+                  "dimParam": "N"
+                },
+                {
+                  "dimValue": "2"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "opsetImport": [
+    {
+      "domain": "",
+      "version": "9"
+    }
+  ]
+}
