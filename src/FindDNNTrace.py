@@ -20,7 +20,7 @@ if __name__ == "__main__":
     number_of_rule = number_of_neurons_each_layer[-1]
 
     original_stdout = sys.stdout
-    number_of_tests = 250
+    number_of_tests = 2000
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
         activation = 'relu'
@@ -87,7 +87,7 @@ if __name__ == "__main__":
                 for trace in traces:
                     if layer == 1:
                         input_implication(weight[0], bias[0], number_of_layer, trace, names, rule)
-                    print(trace)
+                    #print(trace)
                     checker_tool_input(model, weight[0], bias[0], number_of_layer, number_of_neurons_each_layer, rule, names, trace)
                 for trace in traces:
                     print_implication_between_two_layers(weight[layer], bias[layer], number_of_layer, trace, names, number_of_layer - 1,
@@ -96,8 +96,4 @@ if __name__ == "__main__":
         sys.stdout = original_stdout  # Reset the standard output to its original value
         tf.saved_model.save(model, filename.replace('.json', ''))
 
-    import keras2onnx
-
-    onnx_model = keras2onnx.convert_keras(model, "test")
-    filename_output_onnx = filename.replace('.json', '.onnx').replace('json', 'onnx')
-    keras2onnx.save_model(onnx_model, filename_output_onnx)
+    saveModelAsOnnx(model, filename)

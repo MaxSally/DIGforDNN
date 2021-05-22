@@ -253,7 +253,11 @@ def previous_layer_implication(X, weight, bias, number_of_layer, number_of_neuro
                 print("local_X: ", local_X)
                 print("Y: ", Y)
                 continue
+
+            #Start Decision Tree
             decisionTree = decision_tree_analysis(local_X, Y, names)
+
+            #Obtain traces from Decision Tree
             traces = extract_decision_tree(decisionTree, names)
             print(traces)
             if len(traces) == 0:

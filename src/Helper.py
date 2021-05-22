@@ -2,6 +2,7 @@ import numpy as np
 import json
 import onnx
 from onnx2keras import onnx_to_keras
+import keras2onnx
 
 def input_processing_json(file_path):
     '''
@@ -83,3 +84,8 @@ def input_processing_onnx(file_path=None):
     print(bias)
     return number_of_layer, number_of_neurons_each_layer, weight, bias
 
+
+def saveModelAsOnnx(model, filename):
+    onnx_model = keras2onnx.convert_keras(model, "test")
+    filename_output_onnx = filename.replace('.json', '.onnx').replace('json', 'onnx')
+    keras2onnx.save_model(onnx_model, filename_output_onnx)
