@@ -96,4 +96,4 @@ if __name__ == "__main__":
         sys.stdout = original_stdout  # Reset the standard output to its original value
         tf.saved_model.save(model, filename.replace('.json', ''))
 
-    saveModelAsOnnx(model, filename)
+    saveModelAsOnnx(model, filename.replace('.json', '.onnx').replace('json', 'onnx'))

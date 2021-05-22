@@ -87,5 +87,4 @@ def input_processing_onnx(file_path=None):
 
 def saveModelAsOnnx(model, filename):
     onnx_model = keras2onnx.convert_keras(model, "test")
-    filename_output_onnx = filename.replace('.json', '.onnx').replace('json', 'onnx')
-    keras2onnx.save_model(onnx_model, filename_output_onnx)
+    keras2onnx.save_model(onnx_model, filename)
