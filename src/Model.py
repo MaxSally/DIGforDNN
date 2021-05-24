@@ -5,7 +5,7 @@ from sklearn import tree
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, ReLU
 
 
 NO_PROPERTY_MESSAGE = "No properties"
@@ -289,17 +289,18 @@ def input_implication(weight, bias, number_of_layer, neuron, feature_names, rule
     n = len(bias)
     weight = np.array(weight)
     result = ""
-    for i in range(n):
+    print(feature_names)
+    for j in range(m):
         output = ""
-        for j in range(m):
-            output += (" +" if weight[j][i] >= 0 else " ") + str(weight[j][i]) + "x" + str(j)
-        if feature_names[i] not in neuron:
+        for i in range(n):
+            output += (" +" if weight[i][j] >= 0 else " ") + str(weight[i][j]) + "x" + str(i)
+        if feature_names[j] not in neuron:
             continue
-        elif neuron[feature_names[i]][1]:
+        elif neuron[feature_names[j]][1]:
             output += " > "
         else:
             output += " <= "
-        output += str(float(-bias[j][0]) if bias[j][0] != 0 else bias[j][0])
+        output += str(float(-bias[i][0]) if bias[i][0] != 0 else bias[i][0])
         result += ("" if result == "" else " and ") + output
     implication = get_implication_in_text(number_of_layer, number_of_layer, rule)
     result += " => " + implication
@@ -323,7 +324,8 @@ def createModel(number_of_layer, number_of_neurons_each_layer, weight, bias):
                             kernel_initializer=tf.constant_initializer(weight[i - 1]),
                             bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
         else:
-            model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
+            model.add(Dense(number_of_neurons_each_layer[i],
+                            activation = activation,
                             kernel_initializer=tf.constant_initializer(weight[i - 1]),
                             bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
     model.summary()

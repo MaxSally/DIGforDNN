@@ -6,22 +6,36 @@ from tensorflow import keras
 from Model import *
 from CheckerTool import *
 from Helper import *
+import onnx
+from onnx2keras import onnx_to_keras
 
 if __name__ == "__main__":
 
     # input_processing_onnx()
     # exit()
 
-    number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, 0, [], [], 0
+
+
     filename = sys.argv[1]
-    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
+    input_mode = sys.argv[2]
+
+    # createAndSaveModelAsOnnx(filename)
+    # exit(0)
+
+    number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, [], [], [], 0
+    if input_mode == 'json':
+        number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
+    elif input_mode == 'onnx':
+        number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_onnx(filename)
     number_of_rule = number_of_neurons_each_layer[-1]
+    model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
 
     original_stdout = sys.stdout
     number_of_tests = 500
+
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
-        model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
+
 
         X = [[] for i in range(number_of_layer)]
 

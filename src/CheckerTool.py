@@ -53,12 +53,16 @@ def checker_tool_input(model, weight, bias, number_of_layer, number_of_neurons_e
     j = 0
     selected = {}
     equation_list = []
+    print("SHAPE")
+    print(np.array(weight).shape)
+    print(len(bias))
     for name in names:
         if name in trace:
             z = z3.Real('z')
             z = bias[j][0]
             for i in range(len(bias)):
                 variable = "x" + str(i)
+                print(j)
                 z = z + (inputs_variables_name[variable] * weight[i][j])
             z = z > 0 if trace[name][1] > 0 else z <= 0
             equation_list.append(z)

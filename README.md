@@ -9,13 +9,13 @@ Main file is 'FindDnnTrace.py'.
 -   Command line: 
     + Go to `DIGforDNN/src`
     + `chmod +x FindDNNTrace.py` to allow execution on the program
-    + `python FindDNNTrace.py INPUT_FILE` to run it. Expected output shown in section 3.
+    + `python FindDNNTrace.py INPUT_FILE RUNNING_FILE_TYPE` to run it. Expected output shown in section 3.
     + Sample input is `input.json`. As of right now, the program only accepts input in json format. 
     + If needed to install library: `python -m pip install PACKAGE_NAME`
 
 3. Example:
 - Let say we want to find property of model 1 (stored in `sample_input/json/sample_input_1.json` or `sample_input/onnx/sample_input_1.onnx`).
-- Use command `python FindDNNTrace.py ../sample_input/json/sample_input_1.json`
+- Use command `python FindDNNTrace.py ../sample_input/json/sample_input_1.json json`
 - The output will get written to `sample_output/json/sample_output_1.txt` or `sample_output/onnx/sample_output_1.txt` depend on input parameter.
 - An abridged version of output:
 ```Layer: 1
