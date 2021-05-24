@@ -28,7 +28,7 @@ if __name__ == "__main__":
     elif input_mode == 'onnx':
         number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_onnx(filename)
     number_of_rule = number_of_neurons_each_layer[-1]
-    model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
+    model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)GI
 
     original_stdout = sys.stdout
     number_of_tests = 500
