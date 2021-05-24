@@ -88,3 +88,8 @@ def input_processing_onnx(file_path=None):
 def saveModelAsOnnx(model, filename):
     onnx_model = keras2onnx.convert_keras(model, "test")
     keras2onnx.save_model(onnx_model, filename)
+
+def createAndSaveModelAsOnnx(filename):
+    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
+    model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
+    saveModelAsOnnx(model, filename)

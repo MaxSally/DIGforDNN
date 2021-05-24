@@ -2,8 +2,7 @@ import sys
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+
 from Model import *
 from CheckerTool import *
 from Helper import *
@@ -13,39 +12,16 @@ if __name__ == "__main__":
     # input_processing_onnx()
     # exit()
 
-    model = Sequential()
     number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, 0, [], [], 0
     filename = sys.argv[1]
     number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
     number_of_rule = number_of_neurons_each_layer[-1]
 
     original_stdout = sys.stdout
-    number_of_tests = 2000
+    number_of_tests = 500
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         sys.stdout = f  # Change the standard output to the file we created.
-        activation = 'relu'
-        for i in range(1, number_of_layer):
-            # weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
-            bias[i - 1] = np.array(bias[i - 1]).reshape(number_of_neurons_each_layer[i], 1)
-            # print(weight[i - 1].shape)
-            # print(bias[i - 1].shape)
-            if i == 1:
-                model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[0],),
-                                activation=activation,
-                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-            elif i == number_of_layer - 1:
-                model.add(Dense(number_of_neurons_each_layer[i],
-                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-            else:
-                model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
-                                kernel_initializer=tf.constant_initializer(weight[i - 1]),
-                                bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
-        model.summary()
-
-        # print(weight)
-        # print(bias)
+        model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
 
         X = [[] for i in range(number_of_layer)]
 
@@ -97,3 +73,5 @@ if __name__ == "__main__":
         tf.saved_model.save(model, filename.replace('.json', ''))
 
     saveModelAsOnnx(model, filename.replace('.json', '.onnx').replace('json', 'onnx'))
+
+

@@ -3,6 +3,9 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
 
 NO_PROPERTY_MESSAGE = "No properties"
@@ -301,6 +304,30 @@ def input_implication(weight, bias, number_of_layer, neuron, feature_names, rule
     implication = get_implication_in_text(number_of_layer, number_of_layer, rule)
     result += " => " + implication
     print(result)
+
+def createModel(number_of_layer, number_of_neurons_each_layer, weight, bias):
+    model = Sequential()
+    activation = 'relu'
+    for i in range(1, number_of_layer):
+        # weight[i - 1] = np.array(weight[i - 1]).reshape(np.array(weight[i - 1]).shape)
+        bias[i - 1] = np.array(bias[i - 1]).reshape(number_of_neurons_each_layer[i], 1)
+        # print(weight[i - 1].shape)
+        # print(bias[i - 1].shape)
+        if i == 1:
+            model.add(Dense(number_of_neurons_each_layer[i], input_shape=(number_of_neurons_each_layer[0],),
+                            activation=activation,
+                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+        elif i == number_of_layer - 1:
+            model.add(Dense(number_of_neurons_each_layer[i],
+                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+        else:
+            model.add(Dense(number_of_neurons_each_layer[i], activation=activation,
+                            kernel_initializer=tf.constant_initializer(weight[i - 1]),
+                            bias_initializer=tf.constant_initializer(bias[i - 1]), dtype='float64'))
+    model.summary()
+    return model
 
 
 
