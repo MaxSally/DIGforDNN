@@ -41,6 +41,7 @@ if __name__ == "__main__":
 
         for test in range(number_of_tests):
             inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
+            #inps = np.array([14, 10]).reshape(1, 2)
             # inps.reshape(1, number_of_neurons_each_layer[0])
             # print(inps)
             # for layer in model.layers:
@@ -51,6 +52,9 @@ if __name__ == "__main__":
             outputs = extractor(inps)
             X[0].append(inps[0])
             cnt = 1
+            # print(inps[0])
+            # print(outputs)
+            # exit(0)
             for layer in outputs:
                 X[cnt].append(layer.numpy()[0])
                 cnt += 1
@@ -84,7 +88,7 @@ if __name__ == "__main__":
                                                          rule)
             print()
         sys.stdout = original_stdout  # Reset the standard output to its original value
-        tf.saved_model.save(model, filename.replace('.json', ''))
+        #tf.saved_model.save(model, filename.replace('.json', ''))
 
     #saveModelAsOnnx(model, filename.replace('.json', '.onnx').replace('json', 'onnx'))
 
