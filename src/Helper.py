@@ -5,7 +5,7 @@ from onnx2keras import onnx_to_keras
 import onnxmltools
 import keras2onnx
 
-from src.Model import createModel
+from Model import createModel
 
 
 def input_processing_json(file_path):
@@ -49,6 +49,7 @@ def check_input_constraint(test_input, weight, bias, trace):
     second_layer = np.cross(test_input, weight) > 0
     return second_layer == trace
 
+
 def input_processing_onnx(file_path=None):
     '''
     Process input from onnx file.
@@ -68,7 +69,7 @@ def input_processing_onnx(file_path=None):
     onnx_model = onnx.load(file_path)
     onnx_model.graph.node[2].output = 'dense/Relu_0'
     print(onnx_model.graph.node[2].output)
-    #print(onnx_model.graph.input)
+    # print(onnx_model.graph.input)
     exit(0)
     kera_model = onnx_to_keras(onnx_model, input_names=['dense_input'])
     number_of_layer = 0
@@ -81,7 +82,8 @@ def input_processing_onnx(file_path=None):
             continue
         number_of_layer += 1
         if number_of_layer == 1:
-            number_of_neurons_each_layer.append(np.array(layer_weight[0]).shape[0])
+            number_of_neurons_each_layer.append(
+                np.array(layer_weight[0]).shape[0])
         number_of_neurons_each_layer.append(np.array(layer_weight[0]).shape[1])
         weight.append(np.array(layer_weight[0]))
         bias.append(np.array(layer_weight[1]))
@@ -97,7 +99,10 @@ def saveModelAsOnnx(model, filename):
     onnx_model = onnxmltools.convert_keras(model, target_opset=7)
     onnxmltools.save_model(onnx_model, filename)
 
+
 def createAndSaveModelAsOnnx(filename):
-    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(filename)
-    model = createModel(number_of_layer, number_of_neurons_each_layer, weight, bias)
-    saveModelAsOnnx(model, filename.replace('.json', '.onnx').replace('json', 'onnx'))
+    number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(
+        filename)
+    model = createModel(
+        number_of_layer, number_of_neurons_each_layer, weight, bias)
+    #saveModelAsOnnx(model, filename.replace('.json', '.onnx').replace('json', 'onnx'))
