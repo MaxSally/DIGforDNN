@@ -94,8 +94,10 @@ class Model:
         return m
 
     def ceval(self, inps):
-        assert isinstance(inps, list), inps
-        assert len(inps) == self.ninps
+
+        if isinstance(inps, list):
+            inps = np.array([inps])
+        assert len(inps[0]) == self.ninps
 
         # self.model.compile()
         extractor = keras.Model(inputs=self.model.inputs,
@@ -104,16 +106,24 @@ class Model:
         print('outputs', outputs)
         return outputs
 
-    def infer(self):
-        DBG()
-        ntests = 500
-
-        for test in range(ntests):
+    def collect_traces(self, nsamples=5):
+        # collect traces
+        X = [[] for _ in range(len(self.model.layers)+1)]
+        for test in range(nsamples):
             # todo: replace 1,2 with layer size
             inps = np.random.uniform(-10, 10, (1, self.ninps))
-            print('myinps', inps, inps[0])
-            outputs = self.meval(inps)
-            # DBG()
+            X[0].append(inps[0])
+
+            lid = 1
+            outputs = self.ceval(inps)
+            for layer in outputs:
+                X[lid].append(layer.numpy()[0])
+                lid += 1
+
+        return X
+
+    def infer(self, nsamples=5):
+        X = self.collect_traces(nsamples)
 
 
 def model_pa4():
@@ -201,7 +211,9 @@ model = model_pa5()
 # print(model.symbolic_states)
 model = model_pa4()
 # print(model.symbolic_states)
-print(model.seval([4.0, 3.5]))
+inp = [4.0, 3.5]
+print(model.seval(inp))
+print(model.ceval(inp))
 # [n0_1 = 15/2,
 #  o1 = 1/2,
 #  o0 = -1/2,
@@ -210,8 +222,10 @@ print(model.seval([4.0, 3.5]))
 #  n1_0 = 0,
 #  i0 = 4,
 #  n0_0 = 1/2]
-print(model.seval([1.0, -1.0]))
-
+inp = [1.0, -1.0]
+print(model.seval(inp))
+print(model.ceval(inp))
+model.infer()
 
 # print(model.symbolic_states)
 # createAndSaveModelAsOnnx(json_file)
