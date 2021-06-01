@@ -19,17 +19,31 @@ class Model:
         self.model = model
 
     @property
-    def nlayers(self):
-        return len(self.model.layers)
+    def ninps(self):
+        assert self.model.input_shape[0] is None
+
+        return self.model.input_shape[1]
+
+    @property
+    def symbolic_inps(self):
+        return [z3.Real(f"i{n}") for n in range(self.ninps)]
+
+    @property
+    def symbolic_solver(self):
+        try:
+            return self._symbolic_solver
+        except AttributeError:
+            self._symbolic_solver = z3.Solver()
+            self._symbolic_solver.add(self.symbolic_states)
+            return self._symbolic_solver
 
     @property
     def symbolic_states(self):
         try:
             return self._symbolic_states
         except AttributeError:
-            prev_nodes = [z3.Real(f"i{n}")
-                          for n in range(self.model.input_shape[1])]
             ss = []
+            prev_nodes = self.symbolic_inps
             for lid, layer in enumerate(self.model.layers):
                 weights, biases = layer.get_weights()
                 vs = np.array([prev_nodes]).dot(weights) + biases
@@ -58,16 +72,32 @@ class Model:
             self._symbolic_states = f
             return f
 
-    def meval(self, inps):
+    def seval(self, inps):
+        """
+        Apply constraint solving on symbolic states to obtain concrete values
+        """
 
-        print(inps)
-        self.model.compile()
-        # print('output', self.model.evaluate(inps))
+        assert isinstance(inps, list), inps
+        assert len(inps) == self.ninps
 
-        # print('layers', len(self.model.layers), self.model.layers)
-        # print('weights', len(self.model.weights), self.model.weights)
-        # print("\n")
+        inps = z3.And([s == v for s, v in zip(self.symbolic_inps, inps)])
 
+        self.symbolic_solver.push()
+        self.symbolic_solver.add(inps)
+        if self.symbolic_solver.check() == z3.sat:
+            m = self.symbolic_solver.model()
+        else:
+            m = None
+        print(self.symbolic_solver)
+        self.symbolic_solver.pop()
+
+        return m
+
+    def ceval(self, inps):
+        assert isinstance(inps, list), inps
+        assert len(inps) == self.ninps
+
+        # self.model.compile()
         extractor = keras.Model(inputs=self.model.inputs,
                                 outputs=[layer.output for layer in self.model.layers])
         outputs = extractor(inps)
@@ -75,14 +105,15 @@ class Model:
         return outputs
 
     def infer(self):
+        DBG()
         ntests = 500
 
         for test in range(ntests):
             # todo: replace 1,2 with layer size
-            inps = np.random.uniform(-10, 10, (1, 2))
+            inps = np.random.uniform(-10, 10, (1, self.ninps))
             print('myinps', inps, inps[0])
             outputs = self.meval(inps)
-            DBG()
+            # DBG()
 
 
 def model_pa4():
@@ -167,8 +198,20 @@ def model_pa5():
 
 
 model = model_pa5()
-print(model.symbolic_states)
+# print(model.symbolic_states)
 model = model_pa4()
-print(model.symbolic_states)
-print(model.symbolic_states)
+# print(model.symbolic_states)
+print(model.seval([4.0, 3.5]))
+# [n0_1 = 15/2,
+#  o1 = 1/2,
+#  o0 = -1/2,
+#  i1 = 7/2,
+#  n1_1 = 1/2,
+#  n1_0 = 0,
+#  i0 = 4,
+#  n0_0 = 1/2]
+print(model.seval([1.0, -1.0]))
+
+
+# print(model.symbolic_states)
 # createAndSaveModelAsOnnx(json_file)
