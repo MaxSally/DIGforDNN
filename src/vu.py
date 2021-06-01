@@ -1,6 +1,6 @@
 import pdb
-from Helper import createAndSaveModelAsOnnx
-import json
+# from Helper import createAndSaveModelAsOnnx
+# import json
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
@@ -17,6 +17,10 @@ dtype = 'float64'
 class Model:
     def __init__(self, model):
         self.model = model
+
+    @property
+    def nlayers(self):
+        return len(self.model.layers)
 
     @property
     def ninps(self):
@@ -59,7 +63,7 @@ class Model:
                         v = z3.If(0 >= v, 0, v)
                     v = z3.simplify(v)
 
-                    if lid < len(self.model.layers) - 1:
+                    if lid < self.nlayers - 1:
                         node = z3.Real(f"n{lid}_{i}")
                     else:
                         node = z3.Real(f"o{i}")
@@ -108,8 +112,8 @@ class Model:
 
     def collect_traces(self, nsamples=5):
         # collect traces
-        X = [[] for _ in range(len(self.model.layers)+1)]
-        for test in range(nsamples):
+        X = [[] for _ in range(self.nlayers + 1)]
+        for _ in range(nsamples):
             # todo: replace 1,2 with layer size
             inps = np.random.uniform(-10, 10, (1, self.ninps))
             X[0].append(inps[0])
@@ -124,6 +128,9 @@ class Model:
 
     def infer(self, nsamples=5):
         X = self.collect_traces(nsamples)
+        for lid in range(1, self.nlayers):
+            print(f"layer {lid}")
+            X_ = X[lid]
 
 
 def model_pa4():
@@ -207,7 +214,7 @@ def model_pa5():
     return Model(model)
 
 
-model = model_pa5()
+#model = model_pa5()
 # print(model.symbolic_states)
 model = model_pa4()
 # print(model.symbolic_states)
