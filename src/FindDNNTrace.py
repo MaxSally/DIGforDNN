@@ -36,7 +36,7 @@ if __name__ == "__main__":
     number_of_tests = 2000
 
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
-        # sys.stdout = f  # Change the standard output to the file we created.
+        sys.stdout = f  # Change the standard output to the file we created.
 
         X = [[] for i in range(number_of_layer)]
 
