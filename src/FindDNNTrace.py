@@ -21,9 +21,6 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     input_mode = sys.argv[2]
 
-    # createAndSaveModelAsOnnx(filename)
-    # exit(0)
-
     number_of_layer, number_of_neurons_each_layer, weight, bias, number_of_rule = 0, [], [], [], 0
     if input_mode == 'json':
         number_of_layer, number_of_neurons_each_layer, weight, bias = input_processing_json(
@@ -36,7 +33,7 @@ if __name__ == "__main__":
         number_of_layer, number_of_neurons_each_layer, weight, bias)
 
     original_stdout = sys.stdout
-    number_of_tests = 5
+    number_of_tests = 2000
 
     with open(filename.replace('.json', '.txt').replace('input', 'output'), 'w') as f:
         # sys.stdout = f  # Change the standard output to the file we created.
@@ -44,10 +41,9 @@ if __name__ == "__main__":
         X = [[] for i in range(number_of_layer)]
 
         for test in range(number_of_tests):
-            inps = np.random.uniform(-10, 10,
-                                     (1, number_of_neurons_each_layer[0]))
-            #inps = np.array([14, 10]).reshape(1, 2)
-            # inps.reshape(1, number_of_neurons_each_layer[0])
+            inps = np.random.uniform(-10, 10, (1, number_of_neurons_each_layer[0]))
+            #inps = np.array([-1, -2]).reshape(1, 2)
+            #inps.reshape(1, number_of_neurons_each_layer[0])
             # print(inps)
             # for layer in model.layers:
             #     keras_function = K.function([model.input], [layer.output])
