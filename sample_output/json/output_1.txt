@@ -1,0 +1,893 @@
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 2)                 6         
+_________________________________________________________________
+dense_1 (Dense)              (None, 2)                 6         
+_________________________________________________________________
+dense_2 (Dense)              (None, 2)                 6         
+=================================================================
+Total params: 18
+Trainable params: 18
+Non-trainable params: 0
+_________________________________________________________________
+Layer: 1
+Rule: 0
+|--- NEURON_1_0 == FALSE
+|   |--- class: False
+|--- NEURON_1_0 == TRUE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+
+{'NEURON_1_0': [0.5, 1], 'NEURON_1_1': [0.5, 0]}
+NEURON_1_0 == True and NEURON_1_1 == False => NEURON_2_0
+Layer: 1
+Rule: 1
+|--- NEURON_1_1 == FALSE
+|   |--- class: False
+|--- NEURON_1_1 == TRUE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: False
+
+{'NEURON_1_1': [0.5, 1], 'NEURON_1_0': [0.5, 0]}
+NEURON_1_0 == False and NEURON_1_1 == True => NEURON_2_1
+
+Layer: 2
+Rule: 0
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+{'NEURON_2_0': [0.5, 1]}
+NEURON_2_0 == True => y_0
+Layer: 2
+Rule: 1
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- class: True
+
+{'NEURON_2_1': [0.5, 1]}
+NEURON_2_1 == True => y_1
+
+Each layer to the final output
+Layer: 1
+Rule: 0
+|--- NEURON_1_0 == FALSE
+|   |--- class: False
+|--- NEURON_1_0 == TRUE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+
+ +1.0x0 -1.0x1 > 0.0 and  +1.0x0 +1.0x1 <= 0.0 => y_0
+[x1 = -1, x0 = 0]
+[0 + x0*1 + x1*-1 > 0, 0 + x0*1 + x1*1 <= 0]
+[x1 = -1, x0 = 1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ And(-1 == x1, 0 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1))]
+[x1 = -2, x0 = 2]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1))]
+[x1 = -2, x0 = 1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ And(-2 == x1, 2 != x0)]
+[x1 = -2, x0 = 0]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ And(-2 == x1, 2 != x0),
+ And(1 != x0)]
+[x1 = -2, x0 = -1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ And(-2 == x1, 2 != x0),
+ And(1 != x0),
+ And(0 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1))]
+[x1 = -3, x0 = -2]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1))]
+[x1 = -3, x0 = -1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ And(-3 == x1, -2 != x0)]
+[x1 = -3, x0 = 0]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ And(-3 == x1, -2 != x0),
+ And(-1 != x0)]
+[x1 = -3, x0 = 1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ And(-3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0)]
+[x1 = -3, x0 = 2]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ And(-3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0),
+ And(1 != x0)]
+[x1 = -3, x0 = 3]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ And(-3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0),
+ And(1 != x0),
+ And(2 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1))]
+[x1 = -4, x0 = 4]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1))]
+[x1 = -4, x0 = 3]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0)]
+[x1 = -4, x0 = 2]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0)]
+[x1 = -4, x0 = 1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0)]
+[x1 = -4, x0 = 0]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0)]
+[x1 = -4, x0 = -1]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0)]
+[x1 = -4, x0 = -2]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0),
+ And(-1 != x0)]
+[x1 = -4, x0 = -3]
+[0 + x0*1 + x1*-1 > 0,
+ 0 + x0*1 + x1*1 <= 0,
+ Not(And(-1 == x1)),
+ Not(And(-2 == x1)),
+ Not(And(-3 == x1)),
+ And(-4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0),
+ And(-1 != x0),
+ And(-2 != x0)]
+True count: 20 out of 20
+False count: 0 out of 20
+
+NEURON_1_0 == True and NEURON_1_1 == False => y_0
+Rule: 1
+|--- NEURON_1_1 == FALSE
+|   |--- class: False
+|--- NEURON_1_1 == TRUE
+|   |--- NEURON_1_0 == FALSE
+|   |   |--- class: True
+|   |--- NEURON_1_0 == TRUE
+|   |   |--- class: False
+
+ +1.0x0 -1.0x1 <= 0.0 and  +1.0x0 +1.0x1 > 0.0 => y_1
+[x1 = 1, x0 = 0]
+[0 + x0*1 + x1*-1 <= 0, 0 + x0*1 + x1*1 > 0]
+[x1 = 1, x0 = 1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1))]
+[x1 = 2, x0 = 2]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1))]
+[x1 = 2, x0 = 1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ And(2 == x1, 2 != x0)]
+[x1 = 2, x0 = 0]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ And(2 == x1, 2 != x0),
+ And(1 != x0)]
+[x1 = 2, x0 = -1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ And(2 == x1, 2 != x0),
+ And(1 != x0),
+ And(0 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1))]
+[x1 = 3, x0 = -2]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1))]
+[x1 = 3, x0 = -1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ And(3 == x1, -2 != x0)]
+[x1 = 3, x0 = 0]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ And(3 == x1, -2 != x0),
+ And(-1 != x0)]
+[x1 = 3, x0 = 1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ And(3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0)]
+[x1 = 3, x0 = 2]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ And(3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0),
+ And(1 != x0)]
+[x1 = 3, x0 = 3]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ And(3 == x1, -2 != x0),
+ And(-1 != x0),
+ And(0 != x0),
+ And(1 != x0),
+ And(2 != x0)]
+No more assignments for current fix assignment. Changing to new fix values
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1))]
+[x1 = 4, x0 = 4]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1))]
+[x1 = 4, x0 = 3]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0)]
+[x1 = 4, x0 = 2]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0)]
+[x1 = 4, x0 = 1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0)]
+[x1 = 4, x0 = 0]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0)]
+[x1 = 4, x0 = -1]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0)]
+[x1 = 4, x0 = -2]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0),
+ And(-1 != x0)]
+[x1 = 4, x0 = -3]
+[0 + x0*1 + x1*-1 <= 0,
+ 0 + x0*1 + x1*1 > 0,
+ Not(And(1 == x1)),
+ Not(And(2 == x1)),
+ Not(And(3 == x1)),
+ And(4 == x1, 4 != x0),
+ And(3 != x0),
+ And(2 != x0),
+ And(1 != x0),
+ And(0 != x0),
+ And(-1 != x0),
+ And(-2 != x0)]
+True count: 20 out of 20
+False count: 0 out of 20
+
+NEURON_1_0 == False and NEURON_1_1 == True => y_1
+
+Layer: 2
+Rule: 0
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+[x1 = -1, x0 = 0]
+[0 + x0*1 + x1*-1 > 0]
+[x1 = -1, x0 = 1]
+[0 + x0*1 + x1*-1 > 0, And(-1 == x1, 0 != x0)]
+[x1 = -1, x0 = 2]
+[0 + x0*1 + x1*-1 > 0, And(-1 == x1, 0 != x0), And(1 != x0)]
+[x1 = -1, x0 = 3]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0)]
+[x1 = -1, x0 = 4]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0)]
+[x1 = -1, x0 = 5]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0)]
+[x1 = -1, x0 = 6]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0)]
+[x1 = -1, x0 = 7]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0)]
+[x1 = -1, x0 = 8]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0)]
+[x1 = -1, x0 = 9]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0)]
+[x1 = -1, x0 = 10]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0)]
+[x1 = -1, x0 = 11]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0)]
+[x1 = -1, x0 = 12]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0)]
+[x1 = -1, x0 = 13]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0)]
+[x1 = -1, x0 = 14]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0)]
+[x1 = -1, x0 = 15]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0)]
+[x1 = -1, x0 = 16]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0)]
+[x1 = -1, x0 = 17]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0)]
+[x1 = -1, x0 = 18]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0),
+ And(17 != x0)]
+[x1 = -1, x0 = 19]
+[0 + x0*1 + x1*-1 > 0,
+ And(-1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0),
+ And(17 != x0),
+ And(18 != x0)]
+True count: 20 out of 20
+False count: 0 out of 20
+
+NEURON_2_0 == True => y_0
+Rule: 1
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- class: True
+
+[x1 = 1, x0 = 0]
+[0 + x0*1 + x1*1 > 0]
+[x1 = 1, x0 = 1]
+[0 + x0*1 + x1*1 > 0, And(1 == x1, 0 != x0)]
+[x1 = 1, x0 = 2]
+[0 + x0*1 + x1*1 > 0, And(1 == x1, 0 != x0), And(1 != x0)]
+[x1 = 1, x0 = 3]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0)]
+[x1 = 1, x0 = 4]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0)]
+[x1 = 1, x0 = 5]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0)]
+[x1 = 1, x0 = 6]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0)]
+[x1 = 1, x0 = 7]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0)]
+[x1 = 1, x0 = 8]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0)]
+[x1 = 1, x0 = 9]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0)]
+[x1 = 1, x0 = 10]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0)]
+[x1 = 1, x0 = 11]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0)]
+[x1 = 1, x0 = 12]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0)]
+[x1 = 1, x0 = 13]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0)]
+[x1 = 1, x0 = 14]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0)]
+[x1 = 1, x0 = 15]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0)]
+[x1 = 1, x0 = 16]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0)]
+[x1 = 1, x0 = 17]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0)]
+[x1 = 1, x0 = 18]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0),
+ And(17 != x0)]
+[x1 = 1, x0 = 19]
+[0 + x0*1 + x1*1 > 0,
+ And(1 == x1, 0 != x0),
+ And(1 != x0),
+ And(2 != x0),
+ And(3 != x0),
+ And(4 != x0),
+ And(5 != x0),
+ And(6 != x0),
+ And(7 != x0),
+ And(8 != x0),
+ And(9 != x0),
+ And(10 != x0),
+ And(11 != x0),
+ And(12 != x0),
+ And(13 != x0),
+ And(14 != x0),
+ And(15 != x0),
+ And(16 != x0),
+ And(17 != x0),
+ And(18 != x0)]
+True count: 20 out of 20
+False count: 0 out of 20
+
+NEURON_2_1 == True => y_1
+

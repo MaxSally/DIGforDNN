@@ -1,0 +1,14 @@
+|--- neuron_10 = False
+|   |--- class: False
+|--- neuron_10 = True
+|   |--- neuron_11 = Flase
+|   |   |--- class: True
+|   |--- neuron_11 = True
+|   |   |--- class: False
+
+|--- neuron_20 = False
+|   |--- class: False
+|--- neuron_20 = True
+|   |--- class: True
+
+Note: here  neuron_10 = True AND neuron_11 = False is the property. neuron_20 = True can be inferred from previous property.

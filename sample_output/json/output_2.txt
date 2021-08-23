@@ -1,0 +1,125 @@
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 2)                 6         
+_________________________________________________________________
+dense_1 (Dense)              (None, 2)                 6         
+_________________________________________________________________
+dense_2 (Dense)              (None, 2)                 6         
+_________________________________________________________________
+dense_3 (Dense)              (None, 2)                 6         
+=================================================================
+Total params: 24
+Trainable params: 24
+Non-trainable params: 0
+_________________________________________________________________
+Layer: 1
+Rule: 0
+|--- NEURON_1_0 == FALSE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: False
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_0 == TRUE
+|   |--- class: True
+
+{'NEURON_1_0': [0.5, 0], 'NEURON_1_1': [0.5, 1]}
+NEURON_1_0 == False and NEURON_1_1 == True => NEURON_2_0
+{'NEURON_1_0': [0.5, 1]}
+NEURON_1_0 == True => NEURON_2_0
+Layer: 1
+Rule: 1
+|--- NEURON_1_0 == FALSE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: False
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_0 == TRUE
+|   |--- class: True
+
+{'NEURON_1_0': [0.5, 0], 'NEURON_1_1': [0.5, 1]}
+NEURON_1_0 == False and NEURON_1_1 == True => NEURON_2_1
+{'NEURON_1_0': [0.5, 1]}
+NEURON_1_0 == True => NEURON_2_1
+
+Layer: 2
+Rule: 0
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- class: True
+
+{'NEURON_2_1': [0.5, 1]}
+NEURON_2_1 == True => NEURON_3_0
+Layer: 2
+Rule: 1
+|--- NEURON_2_0 == FALSE
+|   |--- class: False
+|--- NEURON_2_0 == TRUE
+|   |--- class: True
+
+{'NEURON_2_0': [0.5, 1]}
+NEURON_2_0 == True => NEURON_3_1
+
+Layer: 3
+Rule: 0
+|--- class: 0
+
+No properties
+Layer: 3
+Rule: 1
+|--- NEURON_3_0 == FALSE
+|   |--- class: False
+|--- NEURON_3_0 == TRUE
+|   |--- class: True
+
+{'NEURON_3_0': [0.5, 1]}
+NEURON_3_0 == True => y_1
+
+Each layer to the final output
+Layer: 1
+Rule: 0
+|--- class: 0
+
+No properties
+Rule: 1
+|--- NEURON_1_0 == FALSE
+|   |--- NEURON_1_1 == FALSE
+|   |   |--- class: False
+|   |--- NEURON_1_1 == TRUE
+|   |   |--- class: True
+|--- NEURON_1_0 == TRUE
+|   |--- class: True
+
+ -0.7x0 +0.2x1 <= 0.0 and  -0.5x0 +0.2x1 > 0.0 => y_1
+ -0.7x0 +0.2x1 > 0.0 => y_1
+NEURON_1_0 == False and NEURON_1_1 == True => y_1
+NEURON_1_0 == True => y_1
+
+Layer: 2
+Rule: 0
+|--- class: 0
+
+No properties
+Rule: 1
+|--- NEURON_2_1 == FALSE
+|   |--- class: False
+|--- NEURON_2_1 == TRUE
+|   |--- class: True
+
+NEURON_2_1 == True => y_1
+
+Layer: 3
+Rule: 0
+|--- class: 0
+
+No properties
+Rule: 1
+|--- NEURON_3_0 == FALSE
+|   |--- class: False
+|--- NEURON_3_0 == TRUE
+|   |--- class: True
+
+NEURON_3_0 == True => y_1
+

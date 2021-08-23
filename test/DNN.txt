@@ -1,0 +1,81 @@
+number_of_layer = 3
+number_of_neurons_each_layer = 2
+    number_of_rule = 5
+    weight = np.array([[[1.0, -1.0], [1.0, 1.0]], [[0.5, -0.2], [-0.5, 0.1]], [[1.0, -1.0], [-1.0, 1.0]]])
+    bias = np.array([[[0.0], [0.0]], [[0.0], [0.0]], [[0.0], [0.0]]])
+
+|--- feature_0 <= 0.50
+|   |--- class: False
+|--- feature_0 >  0.50
+|   |--- feature_1 <= 0.50
+|   |   |--- class: True
+|   |--- feature_1 >  0.50
+|   |   |--- class: False
+
+|--- feature_0 <= 0.50
+|   |--- class: False
+|--- feature_0 >  0.50
+|   |--- class: True
+
+*********************************************
+
+weight = [[[-1.0, 1.0, 0.9], [-0.3, 0.7, 0.2], [0.7, -0.4,0.1]],
+          [[0.2, -0.4, 0.2], [-0.8, 0.7, 0.2], [0.3, 0.3, 1.0]],
+          [[0.4, 0.7, -0.4], [-0.9, 0.4, 0.9], [1.0, -0.4, 0.1]]]
+bias = np.array([[[0.0], [0.0], [0.0]], [[0.0], [0.0], [0.0]], [[0.0], [0.0], [0.0]]])
+
+Accuracy: 0.9683333333333334
+|--- feature_0 <= 0.50
+|   |--- class: False
+|--- feature_0 >  0.50
+|   |--- feature_2 <= 0.50
+|   |   |--- feature_1 <= 0.50
+|   |   |   |--- class: False
+|   |   |--- feature_1 >  0.50
+|   |   |   |--- class: False
+|   |--- feature_2 >  0.50
+|   |   |--- feature_1 <= 0.50
+|   |   |   |--- class: False
+|   |   |--- feature_1 >  0.50
+|   |   |   |--- class: False
+
+Accuracy: 0.9683333333333334
+|--- feature_0 <= 0.50
+|   |--- class: False
+|--- feature_0 >  0.50
+|   |--- feature_1 <= 0.50
+|   |   |--- class: False
+|   |--- feature_1 >  0.50
+|   |   |--- class: False
+
+************************************
+weight = [[[-0.4, 0.9, 0.9], [-0.3, 0.7, 0.2], [0.7, -0.4, 0.4]],
+          [[0.5, -0.5, -0.5], [0.1, 0.2, 0.8], [0.3, 0.2, 0.1]],
+          [[0.7, -0.4, -0.8], [0.3, 0.4, -0.9], [1.0, -0.4, 0.1]]]
+bias = np.array([[[0.0], [0.0], [0.0]], [[0.0], [0.0], [0.0]], [[0.0], [0.0], [0.0]]])
+
+Accuracy: 1.0
+|--- feature_2 <= 0.50
+|   |--- feature_0 <= 0.50
+|   |   |--- feature_1 <= 0.50
+|   |   |   |--- class: False
+|   |   |--- feature_1 >  0.50
+|   |   |   |--- class: True
+|   |--- feature_0 >  0.50
+|   |   |--- class: True
+|--- feature_2 >  0.50
+|   |--- class: True
+
+Accuracy: 1.0
+|--- feature_0 <= 0.50
+|   |--- class: False
+|--- feature_0 >  0.50
+|   |--- class: True
+
+
+************
+Change input format to file.
+change output format to be more legible.
+bigger dataset.
+
+
